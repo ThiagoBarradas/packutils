@@ -22,20 +22,20 @@ before_build:
 - dotnet restore
 
 build:
-  project: UAUtil.sln
+  project: PackUtils.sln
 
 test_script:
-  - OpenCover.Console.exe -oldstyle -register:user -target:"C:/Program Files/dotnet/dotnet.exe" -targetargs:"test --logger:trx;LogFileName=results.trx /p:DebugType=full UAUtil.Test\UAUtil.Test.csproj" -filter:"+[UAUtil*]* -[UAUtil.Test*]*" -output:".\coverage.xml"
+  - OpenCover.Console.exe -oldstyle -register:user -target:"C:/Program Files/dotnet/dotnet.exe" -targetargs:"test --logger:trx;LogFileName=results.trx /p:DebugType=full PackUtils.Test\PackUtils.Test.csproj" -filter:"+[PackUtils*]* -[PackUtils.Test*]*" -output:".\coverage.xml"
   - codecov -f .\coverage.xml -t %CODECOV_TOKEN%
 
 after_test:
   - dotnet pack --configuration Release /p:Version=%version%
 
 artifacts:
-  - path: UAUtil\bin\Release\netstandard2.0\UAUtil.dll
-    name: UAUtil.dll
-  - path: UAUtil\bin\Release\UAUtil.%version%.nupkg
-    name: UAUtil.%version%.nupkg
+  - path: PackUtils\bin\Release\netstandard2.0\PackUtils.dll
+    name: PackUtils.dll
+  - path: PackUtils\bin\Release\PackUtils.%version%.nupkg
+    name: PackUtils.%version%.nupkg
 
 deploy:
   provider: NuGet
