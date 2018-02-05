@@ -2,6 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>Thiago Barradas</Authors>
+    <Description>Many utilities like: enumeration, hash, json (extension newtonsoft)m regexm signature, string, uri, etc</Description>
+    <PackageTags>enumeration, hash, json, newtonsoft, regex, signature, string, uri, util, utils, utility, utilities, crypt</PackageTags>
+    <RepositoryUrl>https://github.com/ThiagoBarradas/packutils</RepositoryUrl>
+    <PackageLicenseUrl>MIT</PackageLicenseUrl>
+    <Company></Company>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+  </ItemGroup>
 
 </Project>
