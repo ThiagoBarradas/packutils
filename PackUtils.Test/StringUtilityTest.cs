@@ -5,7 +5,7 @@ namespace PackUtils.Test
     public class StringUtilityTest
     {
         [Fact]
-        public void Replace_Should_Return_Empty_String_With_Empty_OriginalValue()
+        public static void Replace_Should_Return_Empty_String_With_Empty_OriginalValue()
         {
             // arrange
             string originalValue = "";
@@ -18,7 +18,7 @@ namespace PackUtils.Test
         }
 
         [Fact]
-        public void Replace_Should_Return_Empty_String_With_Null_OriginalValue()
+        public static void Replace_Should_Return_Empty_String_With_Null_OriginalValue()
         {
             // arrange
             string originalValue = null;
@@ -31,7 +31,7 @@ namespace PackUtils.Test
         }
 
         [Fact]
-        public void Replace_Should_Return_OriginalString_With_Nothing_Matchs()
+        public static void Replace_Should_Return_OriginalString_With_Nothing_Matchs()
         {
             // arrange
             string originalValue = "test";
@@ -44,7 +44,7 @@ namespace PackUtils.Test
         }
 
         [Fact]
-        public void Replace_Should_Return_OriginalString_With_Single_Match()
+        public static void Replace_Should_Return_OriginalString_With_Single_Match()
         {
             // arrange
             string originalValue = "test test";
@@ -57,7 +57,7 @@ namespace PackUtils.Test
         }
 
         [Fact]
-        public void Replace_Should_Return_OriginalString_With_Multi_Matchs()
+        public static void Replace_Should_Return_OriginalString_With_Multi_Matchs()
         {
             // arrange
             string originalValue = "test test-test";

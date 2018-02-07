@@ -5,7 +5,7 @@ namespace PackUtils.Test
     public class UriUtilityTest
     {
         [Fact]
-        public void AddQueryString_Should_Return_Original_Uri_With_Empty_Parameter()
+        public static void AddQueryString_Should_Return_Original_Uri_With_Empty_Parameter()
         {
             // arrange
             var uri = "http://www.test.com/";
@@ -18,7 +18,7 @@ namespace PackUtils.Test
         }
 
         [Fact]
-        public void AddQueryString_Should_Return_Original_Uri_With_Empty_Uri()
+        public static void AddQueryString_Should_Return_Original_Uri_With_Empty_Uri()
         {
             // arrange
             var uri = "";
@@ -31,7 +31,7 @@ namespace PackUtils.Test
         }
 
         [Fact]
-        public void AddQueryString_Should_Return_Uri_With_First_QueryString_Param()
+        public static void AddQueryString_Should_Return_Uri_With_First_QueryString_Param()
         {
             // arrange
             var uri = "http://www.google.com/";
@@ -44,7 +44,7 @@ namespace PackUtils.Test
         }
 
         [Fact]
-        public void AddQueryString_Should_Return_Uri_With_Second_QueryString_Param()
+        public static void AddQueryString_Should_Return_Uri_With_Second_QueryString_Param()
         {
             // arrange
             var uri = "http://www.google.com/?param1=value1";
@@ -57,7 +57,7 @@ namespace PackUtils.Test
         }
 
         [Fact]
-        public void AddQueryString_Should_Return_Uri_With_Updated_QueryString_Param()
+        public static void AddQueryString_Should_Return_Uri_With_Updated_QueryString_Param()
         {
             // arrange
             var uri = "http://www.google.com/?param=wrong-value";
@@ -70,7 +70,7 @@ namespace PackUtils.Test
         }
 
         [Fact]
-        public void AddQueryString_Should_Return_Uri_With_QueryString_Param_And_Https()
+        public static void AddQueryString_Should_Return_Uri_With_QueryString_Param_And_Https()
         {
             // arrange
             var uri = "https://www.google.com/";
@@ -83,7 +83,7 @@ namespace PackUtils.Test
         }
 
         [Fact]
-        public void AddQueryString_Should_Return_Uri_With_QueryString_Param_And_Diff_Port()
+        public static void AddQueryString_Should_Return_Uri_With_QueryString_Param_And_Diff_Port()
         {
             // arrange
             var uri = "https://www.google.com:505/";

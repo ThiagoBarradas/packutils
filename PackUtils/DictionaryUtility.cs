@@ -17,11 +17,16 @@ namespace PackUtils
         public static IDictionary<string, string> ToDictionary(this object source)
         {
             if (source == null)
+            {
                 ThrowExceptionWhenSourceArgumentIsNull();
+            }
 
             var dictionary = new Dictionary<string, string>();
             foreach (PropertyDescriptor property in TypeDescriptor.GetProperties(source))
+            {
                 AddPropertyToDictionary(property, source, dictionary);
+            }
+
             return dictionary;
         }
 

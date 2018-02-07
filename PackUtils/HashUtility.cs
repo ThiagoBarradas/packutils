@@ -26,9 +26,19 @@ namespace PackUtils
         /// Generate Sha256
         /// </summary>
         /// <param name="str">value</param>
+        /// <returns></returns>
+        public static string GenerateSha256(string str)
+        {
+            return GenerateSha256(str, string.Empty);
+        }
+
+        /// <summary>
+        /// Generate Sha256
+        /// </summary>
+        /// <param name="str">value</param>
         /// <param name="gap">gap</param>
         /// <returns></returns>
-        public static string GenerateSha256(string str, string gap = "")
+        public static string GenerateSha256(string str, string gap)
         {
             str = str + (gap ?? "");
 

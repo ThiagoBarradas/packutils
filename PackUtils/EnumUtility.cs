@@ -21,7 +21,9 @@ namespace PackUtils
         public static T ConvertToEnum<T>(this object enumToConvert)
         {
             if (enumToConvert == null)
+            {
                 return default(T);
+            }
 
             if (!typeof(T).GetTypeInfo().IsEnum)
             {
@@ -48,11 +50,16 @@ namespace PackUtils
         public static List<T> ConvertToEnum<T>(this IList objs)
         {
             if (!typeof(T).IsEnum)
+            {
                 throw new ArgumentException("T must be an enumerated type.");
+            }
 
             List<T> list = new List<T>();
 
-            if (objs == null) return list;
+            if (objs == null)
+            {
+                return list;
+            }
 
             foreach (var obj in objs)
             {
@@ -80,11 +87,14 @@ namespace PackUtils
                 typeof(DescriptionAttribute),
                 false);
 
-            if (attributes != null &&
-                attributes.Length > 0)
+            if (attributes != null && attributes.Length > 0)
+            {
                 return attributes[0].Description;
+            }
             else
+            {
                 return string.Empty;
+            }
         }
 
         /// <summary>
@@ -97,7 +107,10 @@ namespace PackUtils
         public static T GetEnumFromDescription<T>(string description, bool notFoundReturnDefault = true)
         {
             var type = typeof(T);
-            if (!type.IsEnum) throw new InvalidOperationException();
+            if (!type.IsEnum)
+            {
+                throw new InvalidOperationException();
+            }
 
             foreach (var field in type.GetFields())
             {
@@ -105,12 +118,16 @@ namespace PackUtils
                     typeof(DescriptionAttribute)) is DescriptionAttribute attribute)
                 {
                     if (attribute.Description == description)
+                    {
                         return (T)field.GetValue(null);
+                    }
                 }
                 else
                 {
                     if (field.Name == description)
+                    {
                         return (T)field.GetValue(null);
+                    }
                 }
             }
 
@@ -128,10 +145,24 @@ namespace PackUtils
         /// <typeparam name="T">Enum type</typeparam>
         /// <param name="obj">value to parse</param>
         /// <returns></returns>
-        public static bool IsValidToParse<T>(object obj, bool acceptNull = false)
+        public static bool IsValidToParse<T>(object obj)
+        {
+            return IsValidToParse<T>(obj, false);
+        }
+
+        /// <summary>
+        /// Is valid to parse
+        /// </summary>
+        /// <typeparam name="T">Enum type</typeparam>
+        /// <param name="obj">value to parse</param>
+        /// <param name="acceptNull">Set if null is valid</param>
+        /// <returns></returns>
+        public static bool IsValidToParse<T>(object obj, bool acceptNull)
         {
             if (obj == null)
+            {
                 return acceptNull;
+            }
 
             if (!typeof(T).GetTypeInfo().IsEnum)
             {
