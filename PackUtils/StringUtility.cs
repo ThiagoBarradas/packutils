@@ -16,6 +16,11 @@ namespace PackUtils
         /// <returns></returns>
         public static string Replace(this string originalValue, char[] separators, string newValue)
         {
+            if (originalValue == null)
+            {
+                return string.Empty;
+            }
+
             string[] temp;
 
             temp = originalValue.Split(separators, StringSplitOptions.RemoveEmptyEntries);

@@ -19,7 +19,7 @@ namespace PackUtils
         {
             if (string.IsNullOrWhiteSpace(uri) == true || string.IsNullOrWhiteSpace(parameter) == true)
             {
-                return null;
+                return uri;
             }
 
             var uriBuilder = new UriBuilder(uri);
@@ -28,9 +28,18 @@ namespace PackUtils
             query[parameter] = value;
 
             uriBuilder.Query = query.ToString();
-            uri = uriBuilder.ToString();
+           
+            if (uriBuilder.Port == 80 && uriBuilder.Scheme == "http")
+            {
+                uriBuilder.Port = -1;
+            }
 
-            return uri;
+            if (uriBuilder.Port == 443 && uriBuilder.Scheme == "https")
+            {
+                uriBuilder.Port = -1;
+            }
+
+            return uriBuilder.ToString();
         }
     }
 }
