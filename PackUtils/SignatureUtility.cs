@@ -17,11 +17,23 @@ namespace PackUtils
         /// </summary>
         /// <param name="privateKey">Private key</param>
         /// <param name="data">Object</param>
+        /// <returns></returns>
+        public static string CreateSignatureFromObject(string privateKey, object data)
+        {
+            string ignoredField = null;
+            return SignatureUtility.CreateSignatureFromObject(privateKey, data, ignoredField);
+        }
+
+        /// <summary>
+        /// Create signature plain object
+        /// </summary>
+        /// <param name="privateKey">Private key</param>
+        /// <param name="data">Object</param>
         /// <param name="ignoreField">Ignore a property</param>
         /// <returns></returns>
-        public static string CreateSignature(string privateKey, object data, string ignoreField)
+        public static string CreateSignatureFromObject(string privateKey, object data, string ignoreField)
         {
-            return SignatureUtility.CreateSignature(privateKey, data, SignatureUtility.GenerateIgnoreFields(ignoreField));
+            return SignatureUtility.CreateSignatureFromObject(privateKey, data, SignatureUtility.GenerateIgnoreFields(ignoreField));
         }
 
         /// <summary>
@@ -31,7 +43,7 @@ namespace PackUtils
         /// <param name="data">Object</param>
         /// <param name="ignoreFields">Ignore some properties</param>
         /// <returns></returns>
-        public static string CreateSignature(string privateKey, object data, List<string> ignoreFields)
+        public static string CreateSignatureFromObject(string privateKey, object data, List<string> ignoreFields)
         {
             if (ignoreFields == null)
             {
@@ -71,7 +83,20 @@ namespace PackUtils
         /// <returns></returns>
         public static string CreateSignature(string privateKey, string message)
         {
-            return SignatureUtility.Hash(privateKey, message.ToString());
+            return SignatureUtility.Hash(privateKey, message);
+        }
+
+        /// <summary>
+        /// Validate signature from plain object
+        /// </summary>
+        /// <param name="signature">Signature</param>
+        /// <param name="privateKey">Private key</param>
+        /// <param name="data">Object</param>
+        /// <returns></returns>
+        public static bool ValidateSignatureFromObject(string signature, string privateKey, object data)
+        {
+            string ignoredField = null;
+            return SignatureUtility.ValidateSignatureFromObject(signature, privateKey, data, ignoredField);
         }
 
         /// <summary>
@@ -82,9 +107,9 @@ namespace PackUtils
         /// <param name="data">Object</param>
         /// <param name="ignoreField">Ignore a properties</param>
         /// <returns></returns>
-        public static bool ValidateSignature(string signature, string privateKey, object data, string ignoreFields)
+        public static bool ValidateSignatureFromObject(string signature, string privateKey, object data, string ignoreFields)
         {
-            return SignatureUtility.ValidateSignature(signature, privateKey, data, SignatureUtility.GenerateIgnoreFields(ignoreFields));
+            return SignatureUtility.ValidateSignatureFromObject(signature, privateKey, data, SignatureUtility.GenerateIgnoreFields(ignoreFields));
         }
 
         /// <summary>
@@ -95,9 +120,9 @@ namespace PackUtils
         /// <param name="data">Object</param>
         /// <param name="ignoreFields">Ignore some properties</param>
         /// <returns></returns>
-        public static bool ValidateSignature(string signature, string privateKey, object data, List<string> ignoreFields)
+        public static bool ValidateSignatureFromObject(string signature, string privateKey, object data, List<string> ignoreFields)
         {
-            var computedSignature = SignatureUtility.CreateSignature(privateKey, data, ignoreFields);
+            var computedSignature = SignatureUtility.CreateSignatureFromObject(privateKey, data, ignoreFields);
             return string.Compare(computedSignature, signature, StringComparison.OrdinalIgnoreCase) == 0;
         }
 

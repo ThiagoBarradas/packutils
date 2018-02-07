@@ -18,7 +18,7 @@ namespace PackUtils.Test
         public static void ToDictionary_Should_Return_A_Dictionary_With_Object_Values()
         {
             // arrange 
-            PlainObject obj = new PlainObject()
+            PlainObject obj = new PlainObject
             {
                 TestInt = 5,
                 TestString = "test",
