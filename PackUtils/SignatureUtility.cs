@@ -45,15 +45,16 @@ namespace PackUtils
         /// <returns></returns>
         public static string CreateSignatureFromObject(string privateKey, object data, List<string> ignoreFields)
         {
-            if (ignoreFields == null)
+            var ignoreFieldsList = new List<string>();
+            if (ignoreFields != null)
             {
-                ignoreFields = new List<string>();
+                ignoreFieldsList = ignoreFields;
             }
             var message = string.Empty;
 
             foreach (var propertyInfo in data.GetType().GetProperties().OrderBy(p => p.Name))
             {
-                if (ignoreFields.Contains(propertyInfo.Name) == false)
+                if (ignoreFieldsList.Contains(propertyInfo.Name) == false)
                 {
                     var propertyValue = propertyInfo.GetValue(data);
 
@@ -64,8 +65,7 @@ namespace PackUtils
 
                     if (propertyValue != null)
                     {
-                        message += propertyInfo.Name;
-                        message += propertyValue.ToString();
+                        message = string.Concat(message, propertyInfo.Name, propertyValue.ToString());
                     }
                 }
             }

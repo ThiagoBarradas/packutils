@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Xunit;
 
 namespace PackUtils.Test
@@ -167,6 +168,133 @@ namespace PackUtils.Test
 
             // act
             var result = SignatureUtility.ValidateSignatureFromObject(sign, privateKey, obj, "SomeInt");
+
+            // assert
+            Assert.False(result);
+        }
+
+        [Fact]
+        public static void CreateSignatureFromObject_Should_Return_A_Signature_With_Ignored_Fields()
+        {
+            // arrange
+            var obj = new TestSign
+            {
+                SomeString = "test-x",
+                SomeInt = 1,
+                SomeNull = "test-z",
+                SomeBool = true
+            };
+            var privateKey = "my-key";
+
+            // act
+            var sign = SignatureUtility.CreateSignatureFromObject(privateKey, obj, new List<string> { "SomeInt", "SomeNull" });
+
+            // assert
+            Assert.Equal("403ceaa302f5e6c47c72b8049c5700f331542c802e8a44bdc80896ff090afd79", sign);
+        }
+
+        [Fact]
+        public static void ValidateSignatureFromObject_Should_Return_Success_Validate_With_Ignored_Fields()
+        {
+            // arrange
+            var obj = new TestSign
+            {
+                SomeString = "test-x",
+                SomeInt = 1,
+                SomeNull = "test-z",
+                SomeBool = true
+            };
+            var privateKey = "my-key";
+            var sign = "403ceaa302f5e6c47c72b8049c5700f331542c802e8a44bdc80896ff090afd79";
+
+            // act
+            var result = SignatureUtility.ValidateSignatureFromObject(sign, privateKey, obj, new List<string> { "SomeInt", "SomeNull" });
+
+            // assert
+            Assert.True(result);
+        }
+
+        [Fact]
+        public static void ValidateSignatureFromObject_Should_Return_Unsuccess_Validate_With_Ignored_Fields()
+        {
+            // arrange
+            var obj = new TestSign
+            {
+                SomeString = "test-y",
+                SomeInt = 1,
+                SomeNull = "test-z",
+                SomeBool = true
+            };
+            var privateKey = "my-key";
+            var sign = "403ceaa302f5e6c47c72b8049c5700f331542c802e8a44bdc80896ff090afd79";
+
+            // act
+            var result = SignatureUtility.ValidateSignatureFromObject(sign, privateKey, obj, new List<string> { "SomeInt", "SomeNull" });
+
+            // assert
+            Assert.False(result);
+        }
+
+        [Fact]
+        public static void CreateSignatureFromObject_Should_Return_A_Signature_With_Ignored_List_Null()
+        {
+            // arrange
+            var obj = new TestSign
+            {
+                SomeString = "test-x",
+                SomeInt = 1,
+                SomeNull = null,
+                SomeBool = true
+            };
+            var privateKey = "my-key";
+            List<string> ignoredList = null;
+
+            // act
+            var sign = SignatureUtility.CreateSignatureFromObject(privateKey, obj, ignoredList);
+
+            // assert
+            Assert.Equal("24507965277b7d0a2e7db0b8d369eb3bf549c6d623523157125be92174363153", sign);
+        }
+
+        [Fact]
+        public static void ValidateSignatureFromObject_Should_Return_Success_Validate_With_Ignored_List_Null()
+        {
+            // arrange
+            var obj = new TestSign
+            {
+                SomeString = "test-x",
+                SomeInt = 1,
+                SomeNull = null,
+                SomeBool = true
+            };
+            var privateKey = "my-key";
+            var sign = "24507965277b7d0a2e7db0b8d369eb3bf549c6d623523157125be92174363153";
+            List<string> ignoredList = null;
+
+            // act
+            var result = SignatureUtility.ValidateSignatureFromObject(sign, privateKey, obj, ignoredList);
+
+            // assert
+            Assert.True(result);
+        }
+
+        [Fact]
+        public static void ValidateSignatureFromObject_Should_Return_Unsuccess_Validate_With_Ignored_List_Null()
+        {
+            // arrange
+            var obj = new TestSign
+            {
+                SomeString = "test-y",
+                SomeInt = 1,
+                SomeNull = null,
+                SomeBool = true
+            };
+            var privateKey = "my-key";
+            var sign = "24507965277b7d0a2e7db0b8d369eb3bf549c6d623523157125be92174363153";
+            List<string> ignoredList = null;
+
+            // act
+            var result = SignatureUtility.ValidateSignatureFromObject(sign, privateKey, obj, ignoredList);
 
             // assert
             Assert.False(result);

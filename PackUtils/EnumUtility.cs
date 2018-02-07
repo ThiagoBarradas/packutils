@@ -132,16 +132,17 @@ namespace PackUtils
 
             foreach (var field in type.GetFields())
             {
-                if (Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute)) is DescriptionAttribute attribute)
+                DescriptionAttribute attribute = Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute)) as DescriptionAttribute;
+                if (attribute == null)
                 {
-                    if (attribute.Description == description)
+                    if (field.Name == description)
                     {
                         return (T)field.GetValue(null);
                     }
                 }
                 else
                 {
-                    if (field.Name == description)
+                    if (attribute.Description == description)
                     {
                         return (T)field.GetValue(null);
                     }
