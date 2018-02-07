@@ -10,9 +10,9 @@ namespace PackUtils
     public static class RegexUtility
     {
         private const string ALPHA_NUMERIC = "^[A-Za-z0-9]{{min},{max}}$";
-        private const string ALPHA = "^[A-Za-z0-9]{{min},{max}}$";
+        private const string ALPHA = "^[A-Za-z]{{min},{max}}$";
         private const string URL = "^(https?)\\:\\/\\/[a-zA-Z0-9\\-\\.]+\\.[a-zA-Z](:[a-zA-Z0-9]*)?/?([a-zA-Z0-9\\-\\._\\:?\\,\\'/\\+&amp;%\\$#\\=~])*[^\\.\\,\\)\\(\\s]$";
-        private const string IP = "^(([0 - 9]|[1-9] [0-9]|1[0-9]{2}|2[0-4] [0-9]|25[0-5])\\.){3}([0 - 9]|[1-9] [0-9]|1[0-9]{2}|2[0-4] [0-9]|25[0-5])$";
+        private const string IP = "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$";
         private const string URL_OR_IP = "^(((https?)\\:\\/\\/[a-zA-Z0-9\\-\\.]+\\.[a-zA-Z](:[a-zA-Z0-9]*)?\\/?([a-zA-Z0-9\\-\\._\\:?\\,\\'/\\+&amp;%\\$#\\=~])*[^\\.\\,\\)\\(\\s])|((([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])))$";
 
         /// <summary>
@@ -108,30 +108,23 @@ namespace PackUtils
         public static string GetPasswordRegex(int min, int max, bool requiresSpecialChar, bool requiresNumericChar, bool requiresLowerChar, bool requiresUpperChar)
         {
             var expression = "";
-            var upper = "(?=.*[A-Z])";
-            var lower = "(?=.*[a-z])";
-            var numeric = "(?=.*[0-9])";
-            var special = "(?=.*[\\\"\\\'!@#$%¨&*()_\\-+=§¬¢£¹²³\\\\\\/|,.<>;:?°ºª\\[\\]{}~^´`])";
+            var specialChars = "\\\"\\\'!@#$%¨&*()_\\-+=§¬¢£¹²³\\\\\\/|,.<>;:?°ºª\\[\\]{}~^´`";
+            
+            expression += (requiresLowerChar)
+                ? "(?=.*[a-z])"
+                : "([a-z]?)";
 
-            if (requiresLowerChar)
-            {
-                expression += lower;
-            }
+            expression += (requiresUpperChar)
+                ? "(?=.*[A-Z])"
+                : "([A-Z]?)";
 
-            if (requiresUpperChar)
-            {
-                expression += upper;
-            }
+            expression += (requiresNumericChar)
+                ? "(?=.*[0-9])"
+                : "([0-9]?)";
 
-            if (requiresNumericChar)
-            {
-                expression += numeric;
-            }
-
-            if (requiresSpecialChar)
-            {
-                expression += special;
-            }
+            expression += (requiresSpecialChar)
+                ? "(?=.*[" + specialChars + "])"
+                : "([" + specialChars + "]?)";
 
             return "^{exp}.{{min},{max}}$"
                     .Replace("{exp}", expression)
