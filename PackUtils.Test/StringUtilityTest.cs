@@ -18,6 +18,19 @@ namespace PackUtils.Test
         }
 
         [Fact]
+        public void Replace_Should_Return_Empty_String_With_Null_OriginalValue()
+        {
+            // arrange
+            string originalValue = null;
+
+            // act
+            var newValue = StringUtility.Replace(originalValue, new[] { ' ', '-' }, "_");
+
+            // assert
+            Assert.Equal(string.Empty, newValue);
+        }
+
+        [Fact]
         public void Replace_Should_Return_OriginalString_With_Nothing_Matchs()
         {
             // arrange
