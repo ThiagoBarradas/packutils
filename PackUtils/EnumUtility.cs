@@ -36,7 +36,10 @@ namespace PackUtils
             {
                 convertedEnum = (T)Enum.Parse(typeof(T), enumToConvert.ToString(), true);
             }
-            catch (Exception) { }
+            catch (Exception)
+            {
+                // keep default enum if cant possible cast
+            }
 
             return convertedEnum;
         }
@@ -67,7 +70,10 @@ namespace PackUtils
                 {
                     list.Add(ConvertToEnum<T>(obj));
                 }
-                catch (Exception) { }
+                catch (Exception)
+                {
+                    // keep default enum if cant possible cast
+                }
             }
 
             return list;
@@ -104,7 +110,19 @@ namespace PackUtils
         /// <param name="description">description</param>
         /// <param name="notFoundReturnDefault">description</param>
         /// <returns></returns>
-        public static T GetEnumFromDescription<T>(string description, bool notFoundReturnDefault = true)
+        public static T GetEnumFromDescription<T>(string description)
+        {
+            return GetEnumFromDescription<T>(description, true);
+        }
+
+        /// <summary>
+        /// Get enum from description - if not found, returns default
+        /// </summary>
+        /// <typeparam name="T">Enum type</typeparam>
+        /// <param name="description">description</param>
+        /// <param name="notFoundReturnDefault">description</param>
+        /// <returns></returns>
+        public static T GetEnumFromDescription<T>(string description, bool notFoundReturnDefault)
         {
             var type = typeof(T);
             if (!type.IsEnum)
@@ -114,8 +132,7 @@ namespace PackUtils
 
             foreach (var field in type.GetFields())
             {
-                if (Attribute.GetCustomAttribute(field,
-                    typeof(DescriptionAttribute)) is DescriptionAttribute attribute)
+                if (Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute)) is DescriptionAttribute attribute)
                 {
                     if (attribute.Description == description)
                     {

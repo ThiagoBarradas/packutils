@@ -7,7 +7,7 @@ namespace PackUtils
     /// <summary>
     /// Regex utility
     /// </summary>
-    public class RegexUtility
+    public static class RegexUtility
     {
         private const string ALPHA_NUMERIC = "^[A-Za-z0-9]{{min},{max}}$";
         private const string ALPHA = "^[A-Za-z0-9]{{min},{max}}$";
@@ -20,20 +20,33 @@ namespace PackUtils
         /// </summary>
         /// <param name="texts">All texts to check</param>
         /// <param name="regex"Regex pattern></param>
+        /// <returns></returns>
+        public static bool IsMatch(List<string> texts, string regex)
+        {
+            return IsMatch(texts, regex, true);
+        }
+
+        /// <summary>
+        /// Multimatch regex
+        /// </summary>
+        /// <param name="texts">All texts to check</param>
+        /// <param name="regex"Regex pattern></param>
         /// <param name="allowEmptyList">Allow empty list</param>
         /// <returns></returns>
-        public static bool IsMatch(List<string> texts, string regex, bool allowEmptyList = true)
+        public static bool IsMatch(List<string> texts, string regex, bool allowEmptyList)
         {
             if (texts == null || texts.Any() == false)
             {
                 return allowEmptyList;
             }
 
-            Regex rgx = new Regex(regex);
+            Regex regexObj = new Regex(regex);
             foreach (var text in texts)
             {
-                if (rgx.IsMatch(text) == false)
+                if (regexObj.IsMatch(text) == false)
+                {
                     return false;
+                }
             }
 
             return true;
@@ -121,7 +134,7 @@ namespace PackUtils
             }
 
             return "^{exp}.{{min},{max}}$"
-                    .Replace("{exp}", expression.ToString())
+                    .Replace("{exp}", expression)
                     .Replace("{min}", min.ToString())
                     .Replace("{max}", max.ToString());
         }

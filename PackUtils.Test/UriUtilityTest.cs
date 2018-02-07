@@ -2,7 +2,7 @@ using Xunit;
 
 namespace PackUtils.Test
 {
-    public class UriUtilityTest
+    public static class UriUtilityTest
     {
         [Fact]
         public static void AddQueryString_Should_Return_Original_Uri_With_Empty_Parameter()

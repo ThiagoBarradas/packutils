@@ -21,7 +21,7 @@ namespace PackUtils
             {
                 var settings = new JsonSerializerSettings();
 
-                settings.ContractResolver = new DefaultContractResolver()
+                settings.ContractResolver = new DefaultContractResolver
                 {
                     NamingStrategy = new SnakeCaseNamingStrategy()
                 };
@@ -58,7 +58,7 @@ namespace PackUtils
             {
                 var settings = new JsonSerializerSettings();
 
-                settings.ContractResolver = new DefaultContractResolver()
+                settings.ContractResolver = new DefaultContractResolver
                 {
                     NamingStrategy = new LowerCaseNamingResolver()
                 };
@@ -94,7 +94,7 @@ namespace PackUtils
             {
                 var serializer = new JsonSerializer();
                 serializer.NullValueHandling = NullValueHandling.Ignore;
-                serializer.ContractResolver = new DefaultContractResolver()
+                serializer.ContractResolver = new DefaultContractResolver
                 {
                     NamingStrategy = new SnakeCaseNamingStrategy()
                 };
@@ -113,7 +113,7 @@ namespace PackUtils
             {
                 var serializer = new JsonSerializer();
                 serializer.NullValueHandling = NullValueHandling.Ignore;
-                serializer.ContractResolver = new DefaultContractResolver()
+                serializer.ContractResolver = new DefaultContractResolver
                 {
                     NamingStrategy = new LowerCaseNamingResolver()
                 };
@@ -128,11 +128,24 @@ namespace PackUtils
         /// </summary>
         /// <param name="token">JToken</param>
         /// <param name="blackList">JToken</param>
+        public static void MaskFields(JToken token, List<string> blackList)
+        {
+            MaskFields(token, blackList, "******");
+        }
+
+        /// <summary>
+        /// Mask fields
+        /// </summary>
+        /// <param name="token">JToken</param>
+        /// <param name="blackList">JToken</param>
         /// <param name="mask">mask</param>
-        public static void MaskFields(JToken token, List<string> blackList, string mask = "******")
+        public static void MaskFields(JToken token, List<string> blackList, string mask)
         {
             JContainer container = token as JContainer;
-            if (container == null) return;
+            if (container == null)
+            {
+                return;
+            }
 
             List<JToken> removeList = new List<JToken>();
             foreach (JToken el in container.Children())
@@ -161,7 +174,7 @@ namespace PackUtils
     {
         protected override string ResolvePropertyName(string name)
         {
-            return name.ToLower();
+            return name.ToLowerInvariant();
         }
     }
 }

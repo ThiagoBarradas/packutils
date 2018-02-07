@@ -2,7 +2,7 @@ using Xunit;
 
 namespace PackUtils.Test
 {
-    public class StringUtilityTest
+    public static class StringUtilityTest
     {
         [Fact]
         public static void Replace_Should_Return_Empty_String_With_Empty_OriginalValue()

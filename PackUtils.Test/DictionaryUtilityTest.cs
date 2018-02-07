@@ -3,7 +3,7 @@ using Xunit;
 
 namespace PackUtils.Test
 {
-    public class DictionaryUtilityTest
+    public static class DictionaryUtilityTest
     {
         [Fact]
         public static void ToDictionary_Should_Throws_Exception_With_Null_Value()

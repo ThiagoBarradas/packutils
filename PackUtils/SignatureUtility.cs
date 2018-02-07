@@ -33,8 +33,11 @@ namespace PackUtils
         /// <returns></returns>
         public static string CreateSignature(string privateKey, object data, List<string> ignoreFields)
         {
-            if (ignoreFields == null) ignoreFields = new List<string>();
-            var message = new StringBuilder();
+            if (ignoreFields == null)
+            {
+                ignoreFields = new List<string>();
+            }
+            var message = string.Empty;
 
             foreach (var propertyInfo in data.GetType().GetProperties().OrderBy(p => p.Name))
             {
@@ -44,18 +47,18 @@ namespace PackUtils
 
                     if (propertyInfo.PropertyType == typeof(bool))
                     {
-                        propertyValue = propertyValue.ToString().ToLower();
+                        propertyValue = propertyValue.ToString().ToLowerInvariant();
                     }
 
                     if (propertyValue != null)
                     {
-                        message.Append(propertyInfo.Name);
-                        message.Append(propertyValue.ToString());
+                        message += propertyInfo.Name;
+                        message += propertyValue.ToString();
                     }
                 }
             }
 
-            var signature = SignatureUtility.Hash(privateKey, message.ToString());
+            var signature = SignatureUtility.Hash(privateKey, message);
 
             return signature;
         }

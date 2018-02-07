@@ -2,7 +2,7 @@ using Xunit;
 
 namespace PackUtils.Test
 {
-    public class HashUtilityTest
+    public static class HashUtilityTest
     {
         [Fact]
         public static void GenerateRandomSha256_Should_Return_New_And_Diff_Hashs()
