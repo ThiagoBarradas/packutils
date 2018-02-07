@@ -66,14 +66,7 @@ namespace PackUtils
 
             foreach (var obj in objs)
             {
-                try
-                {
-                    list.Add(ConvertToEnum<T>(obj));
-                }
-                catch (Exception)
-                {
-                    // keep default enum if cant possible cast
-                }
+                list.Add(ConvertToEnum<T>(obj));
             }
 
             return list;
