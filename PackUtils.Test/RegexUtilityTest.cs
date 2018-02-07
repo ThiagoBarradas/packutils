@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Xunit;
 
@@ -9,7 +10,7 @@ namespace PackUtils.Test
         public static void GetIpRegex_Should_Return_Success_Match()
         {
             // arrange
-            var ips = new List<string> { "25.10.1.3", "255.0.10.23" };
+            var ips = new List<string> { GetRandomIpAddress(), GetRandomIpAddress() };
 
             // act
             var result = RegexUtility.IsMatch(ips, RegexUtility.GetIpRegex());
@@ -22,7 +23,7 @@ namespace PackUtils.Test
         public static void GetIpRegex_Should_Return_Failed_Match()
         {
             // arrange
-            var ips = new List<string> { "25.10.1.3", "256.0.10.23" };
+            var ips = new List<string> { GetRandomIpAddress(), "256.0.10.23" };
 
             // act
             var result = RegexUtility.IsMatch(ips, RegexUtility.GetIpRegex());
@@ -35,7 +36,7 @@ namespace PackUtils.Test
         public static void GetUrlOrIpRegex_Should_Return_Success_Match()
         {
             // arrange
-            var ipsOrUrls = new List<string> { "25.10.1.3", "255.0.10.230", "http://www.google.com" };
+            var ipsOrUrls = new List<string> { GetRandomIpAddress(), "http://www.google.com" };
 
             // act
             var result = RegexUtility.IsMatch(ipsOrUrls, RegexUtility.GetUrlOrIpRegex());
@@ -48,7 +49,7 @@ namespace PackUtils.Test
         public static void GetUrlOrIpRegex_Should_Return_Failed_Match()
         {
             // arrange
-            var ipsOrUrl = new List<string> { "25.10.1.3", "255.0.10.23", "http//www.google.com" };
+            var ipsOrUrl = new List<string> { GetRandomIpAddress(), "http//www.google.com" };
 
             // act
             var result = RegexUtility.IsMatch(ipsOrUrl, RegexUtility.GetUrlOrIpRegex());
@@ -289,6 +290,12 @@ namespace PackUtils.Test
 
             // assert
             Assert.False(result);
+        }
+
+        private static string GetRandomIpAddress()
+        {
+            var random = new Random();
+            return $"{random.Next(1, 255)}.{random.Next(0, 255)}.{random.Next(0, 255)}.{random.Next(0, 255)}";
         }
     }
 }
