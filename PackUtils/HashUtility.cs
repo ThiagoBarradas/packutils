@@ -29,7 +29,7 @@ namespace PackUtils
         /// <returns></returns>
         public static string GenerateSha256(string str)
         {
-            return GenerateSha256(str, string.Empty);
+            return GenerateSha256(str, null);
         }
 
         /// <summary>
