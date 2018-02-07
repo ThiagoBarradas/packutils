@@ -127,20 +127,13 @@ namespace PackUtils
             var type = typeof(T);
             if (!type.IsEnum)
             {
-                throw new InvalidOperationException();
+                throw new ArgumentException("T must be an enumerated type.");
             }
 
             foreach (var field in type.GetFields())
             {
                 DescriptionAttribute attribute = Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute)) as DescriptionAttribute;
-                if (attribute == null)
-                {
-                    if (field.Name == description)
-                    {
-                        return (T)field.GetValue(null);
-                    }
-                }
-                else
+                if (attribute != null)
                 {
                     if (attribute.Description == description)
                     {
