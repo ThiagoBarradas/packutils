@@ -3,12 +3,14 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>Thiago Barradas</Authors>
-    <Description>Many utilities like: enumeration, hash, json (extension newtonsoft)m regexm signature, string, uri, etc</Description>
-    <PackageTags>enumeration, hash, json, newtonsoft, regex, signature, string, uri, util, utils, utility, utilities, crypt</PackageTags>
+    <Description>Many utilities like: enumeration, hash, json (extension newtonsoft), regex, signature, string, uri, dictionary, etc</Description>
+    <PackageTags>enumeration, hash, json, newtonsoft, regex, signature, string, uri, util, utils, utility, utilities, crypt, dictionary, casting, cast</PackageTags>
     <RepositoryUrl>https://github.com/ThiagoBarradas/packutils</RepositoryUrl>
-    <PackageLicenseUrl>MIT</PackageLicenseUrl>
+    <PackageLicenseUrl>https://github.com/ThiagoBarradas/packutils/blob/master/LICENSE</PackageLicenseUrl>
     <Company></Company>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageIconUrl>https://i.imgur.com/bWz72sT.png</PackageIconUrl>
+    <PackageProjectUrl>https://github.com/ThiagoBarradas/packutils</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>
