@@ -124,6 +124,38 @@ namespace PackUtils
         }
 
         /// <summary>
+        /// Deserialize json in recursive Dictionary[string,object]
+        /// </summary>
+        /// <param name="token"></param>
+        /// <param name="blackList"></param>
+        public static object DeserializeAsObject(this string json)
+        {
+            return DeserializeAsObjectCore(JToken.Parse(json));
+        }
+
+        /// <summary>
+        /// Cast jtoken to object
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        private static object DeserializeAsObjectCore(JToken token)
+        {
+            switch (token.Type)
+            {
+                case JTokenType.Object:
+                    return token.Children<JProperty>()
+                                .ToDictionary(prop => prop.Name,
+                                              prop => DeserializeAsObjectCore(prop.Value));
+
+                case JTokenType.Array:
+                    return token.Select(DeserializeAsObjectCore).ToList();
+
+                default:
+                    return ((JValue)token).Value;
+            }
+        }
+
+        /// <summary>
         /// Mask fields
         /// </summary>
         /// <param name="token">JToken</param>
