@@ -19,10 +19,10 @@ PM> Install-Package PackUtils
 :construction:
 
 ## How can I contribute?
-Please, refer to [CONTRIBUTING](CONTRIBUTING.md)
+Please, refer to [CONTRIBUTING](.github/CONTRIBUTING.md)
 
 ## Found something strange or need a new feature?
-Open a new Issue following our issue template [ISSUE-TEMPLATE](ISSUE-TEMPLATE.md)
+Open a new Issue following our issue template [ISSUE TEMPLATE](.github/ISSUE_TEMPLATE.md)
 
 ## Changelog
 See in [nuget version history](https://www.nuget.org/packages/PackUtils)
