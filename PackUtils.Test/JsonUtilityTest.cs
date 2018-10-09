@@ -1,5 +1,6 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -170,6 +171,35 @@ namespace PackUtils.Test
 
             // assert
             Assert.Null(obj);
+        }
+
+        [Fact]
+        public static void DeserializeAsObject_Should_Return_Parsed_Object()
+        {
+            // arrange
+            var obj = new
+            {
+                SomeTest = "test",
+                Number = 1,
+                MyArray = new string[] { "x", "y" },
+                DepthObj = new {
+                    MyGuid = Guid.Empty,
+                    DateTime = new DateTime(2010, 10, 25)
+                }
+            };
+
+            var jsonString = JsonConvert.SerializeObject(obj);
+
+            // act
+            dynamic result = jsonString.DeserializeAsObject();
+
+            // assert
+            Assert.Equal("test", result["SomeTest"]);
+            Assert.Equal(1, result["Number"]);
+            Assert.Equal("x", result["MyArray"][0]);
+            Assert.Equal("y", result["MyArray"][1]);
+            Assert.Equal(Guid.Empty.ToString(), result["DepthObj"]["MyGuid"].ToString());
+            Assert.Equal(new DateTime(2010, 10, 25).ToString(), result["DepthObj"]["DateTime"].ToString());
         }
     }
 
