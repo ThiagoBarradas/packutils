@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using JsonMasking;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace PackUtils
@@ -158,51 +158,31 @@ namespace PackUtils
         /// <summary>
         /// Mask fields
         /// </summary>
-        /// <param name="token">JToken</param>
-        /// <param name="blackList">JToken</param>
-        public static void MaskFields(JToken token, List<string> blackList)
+        /// <param name="json"></param>
+        /// <param name="blacklist"></param>
+        /// <returns></returns>
+        public static string MaskFields(string json, string[] blacklist)
         {
-            MaskFields(token, blackList, "******");
+            return MaskFields(json, blacklist, "******");
         }
 
         /// <summary>
         /// Mask fields
         /// </summary>
-        /// <param name="token">JToken</param>
-        /// <param name="blackList">JToken</param>
-        /// <param name="mask">mask</param>
-        public static void MaskFields(JToken token, List<string> blackList, string mask)
+        /// <param name="json"></param>
+        /// <param name="blacklist"></param>
+        /// <param name="mask"></param>
+        /// <returns></returns>
+        public static string MaskFields(string json, string[] blacklist, string mask)
         {
-            JContainer container = token as JContainer;
-            if (container == null)
-            {
-                return;
-            }
-
-            List<JToken> removeList = new List<JToken>();
-            foreach (JToken el in container.Children())
-            {
-                var prop = el as JProperty;
-
-                if (prop != null && blackList.Any(f => f.Equals(prop.Name, System.StringComparison.CurrentCultureIgnoreCase)))
-                {
-                    removeList.Add(el);
-                }
-                MaskFields(el, blackList, mask);
-            }
-
-            foreach (JToken el in removeList)
-            {
-                var prop = (JProperty)el;
-                prop.Value = mask;
-            }
+            return json.MaskFields(blacklist, mask);
         }
     }
 
     /// <summary>
     /// Resolve property names to lowercase only
     /// </summary>
-    class LowerCaseNamingResolver : NamingStrategy
+    public class LowerCaseNamingResolver : NamingStrategy
     {
         protected override string ResolvePropertyName(string name)
         {

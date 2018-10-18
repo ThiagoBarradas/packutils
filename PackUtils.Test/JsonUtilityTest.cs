@@ -1,7 +1,6 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Xunit;
@@ -14,7 +13,7 @@ namespace PackUtils.Test
         public static void CamelCaseJsonSerializerSettings_Should_Return_Parsed_Object()
         {
             // arrange
-            var obj = new JsonExample
+            var obj = new JsonExampleTest
             {
                 SomeTest = "test"
             };
@@ -30,7 +29,7 @@ namespace PackUtils.Test
         public static void SnakeCaseJsonSerializerSettings_Should_Return_Parsed_Object()
         {
             // arrange
-            var obj = new JsonExample
+            var obj = new JsonExampleTest
             {
                 SomeTest = "test"
             };
@@ -46,7 +45,7 @@ namespace PackUtils.Test
         public static void LowerCaseJsonSerializerSettings_Should_Return_Parsed_Object()
         {
             // arrange
-            var obj = new JsonExample
+            var obj = new JsonExampleTest
             {
                 SomeTest = "test"
             };
@@ -62,7 +61,7 @@ namespace PackUtils.Test
         public static void CamelCaseJsonSerializer_Should_Return_Parsed_Object()
         {
             // arrange
-            var obj = new JsonExample
+            var obj = new JsonExampleTest
             {
                 SomeTest = "test"
             };
@@ -81,7 +80,7 @@ namespace PackUtils.Test
         public static void SnakeCaseJsonSerializer_Should_Return_Parsed_Object()
         {
             // arrange
-            var obj = new JsonExample
+            var obj = new JsonExampleTest
             {
                 SomeTest = "test"
             };
@@ -100,7 +99,7 @@ namespace PackUtils.Test
         public static void LowerCaseJsonSerializer_Should_Return_Parsed_Object()
         {
             // arrange
-            var obj = new JsonExample
+            var obj = new JsonExampleTest
             {
                 SomeTest = "test"
             };
@@ -126,13 +125,13 @@ namespace PackUtils.Test
                               "\"password\" : \"test2\"" +
                           "}"+
                        "}";
-            var blacklist = new List<string> { "password" };
-            var obj = (JObject)JsonConvert.DeserializeObject(json, JsonUtility.CamelCaseJsonSerializerSettings);
+            var blacklist = new string[] { "*password" };
 
             // act
-            JsonUtility.MaskFields(obj, blacklist);
+            json = JsonUtility.MaskFields(json, blacklist);
 
             // assert
+            var obj = (JObject)JsonConvert.DeserializeObject(json, JsonUtility.CamelCaseJsonSerializerSettings);
             Assert.Equal("******", obj["password"]);
             Assert.Equal("******", obj["sub"]["password"]);
             Assert.Equal("test1", obj["sub"]["some"]);
@@ -149,28 +148,15 @@ namespace PackUtils.Test
                               "\"password\" : \"test2\"" +
                           "}" +
                        "}";
-            var blacklist = new List<string> { "sub" };
-            var obj = (JObject)JsonConvert.DeserializeObject(json, JsonUtility.CamelCaseJsonSerializerSettings);
+            var blacklist = new string[] { "sub" };
 
             // act
-            JsonUtility.MaskFields(obj, blacklist, "xxx");
+            json = JsonUtility.MaskFields(json, blacklist, "xxx");
 
             // assert
+            var obj = (JObject)JsonConvert.DeserializeObject(json, JsonUtility.CamelCaseJsonSerializerSettings);
             Assert.Equal("test", obj["password"]);
             Assert.Equal("xxx", obj["sub"]);
-        }
-
-        [Fact]
-        public static void MaskFields_Should_Return_Null_With_Null_Object()
-        {
-            // arrange
-            var blacklist = new List<string> { "password" };
-            JToken obj = null;
-            // act
-            JsonUtility.MaskFields(obj, blacklist);
-
-            // assert
-            Assert.Null(obj);
         }
 
         [Fact]
@@ -203,7 +189,7 @@ namespace PackUtils.Test
         }
     }
 
-    class JsonExample
+    public class JsonExampleTest
     {
         public string SomeTest { get; set; }
     }
