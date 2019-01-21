@@ -68,5 +68,29 @@ namespace PackUtils.Test
             // assert
             Assert.Equal(originalValue.Replace(" ", "_").Replace("-", "_"), newValue);
         }
+
+        [Theory]
+        [InlineData("âÂéío123 lçüa", "aAeio123 lcua")]
+        [InlineData("lcua", "lcua")]
+        public static void RemoveDiacritics_Should_Works(string original, string expected)
+        {
+            // arrange & act
+            var result = StringUtility.RemoveDiacritics(original);
+
+            // assert
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData("Á$%aA-_+=eio123 lcua", "aAeio lcua")]
+        [InlineData("lcua", "lcua")]
+        public static void RemoveNumbersAndSpecialCharacters_Should_Works(string original, string expected)
+        {
+            // arrange & act
+            var result = StringUtility.RemoveNumbersAndSpecialCharacters(original);
+
+            // assert
+            Assert.Equal(expected, result);
+        }
     }
 }
