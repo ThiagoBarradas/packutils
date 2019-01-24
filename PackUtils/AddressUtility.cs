@@ -9,16 +9,34 @@ namespace PackUtils
         public string Number { get; set; }
 
         public string Neighborhood { get; set; }
+
+        public string City { get; set; }
+
+        public string State { get; set; }
+
+        public string Country { get; set; }
+
+        public string ZipCode { get; set; }
     }
 
     public static class AddressUtility
     {
         private static char[] SeparatorsAddress = new char[] { '\\', '/', ',', '.', '\t', '-', '_', '\'', '"' };
 
-        public static SplittedAddress SplitAddress(string line1, string line2)
+        public static SplittedAddress SplitAddress(string line1, string line2, string city, string state, string country, string zipCode)
         {
+            if (string.IsNullOrWhiteSpace(zipCode) ||
+                string.IsNullOrWhiteSpace(line1))
+            {
+                return null;
+            }
+
             var splittedAddress = new SplittedAddress();
 
+            splittedAddress.ZipCode = Regex.Replace(zipCode, @"\D", "");
+            splittedAddress.Country = country;
+            splittedAddress.State = state;
+            splittedAddress.City = city;
             splittedAddress.Street = line1;
             splittedAddress.Neighborhood = line2;
             splittedAddress.Number = "-";
@@ -43,6 +61,8 @@ namespace PackUtils
                 splittedAddress.Number = number2;
             }
 
+            // Handle defautls
+
             if (string.IsNullOrWhiteSpace(splittedAddress.Street) == true)
             {
                 splittedAddress.Street = "-";
@@ -53,7 +73,27 @@ namespace PackUtils
                 splittedAddress.Neighborhood = "-";
             }
 
+            if (string.IsNullOrWhiteSpace(splittedAddress.State) == true)
+            {
+                splittedAddress.State = "??";
+            }
+
+            if (string.IsNullOrWhiteSpace(splittedAddress.City) == true)
+            {
+                splittedAddress.State = "??";
+            }
+
             // Handle size of address properties
+            if (splittedAddress.City.Length > 64)
+            {
+                splittedAddress.City = splittedAddress.City.Substring(0, 64);
+            }
+
+            if (splittedAddress.ZipCode.Length > 16)
+            {
+                splittedAddress.ZipCode = splittedAddress.ZipCode.Substring(0, 16);
+            }
+
             if (splittedAddress.Street.Length > 64)
             {
                 splittedAddress.Street = splittedAddress.Street.Substring(0, 64);
