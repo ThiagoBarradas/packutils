@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 
 namespace PackUtils
@@ -67,6 +68,17 @@ namespace PackUtils
                 }
             }
             return sb.ToString();
+        }
+
+        /// <summary>
+        /// Convert string to snake case
+        /// </summary>
+        /// <param name="text">String to convert</param>
+        /// <returns></returns>
+        public static string ToSnakeCase(this string text)
+        {
+            if (string.IsNullOrEmpty(text)) return null;
+            return string.Concat(text.Select((_char, i) => i > 0 && char.IsUpper(_char) ? $"_{_char.ToString()}" : _char.ToString())).ToLower();
         }
     }
 }

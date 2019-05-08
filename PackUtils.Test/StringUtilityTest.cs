@@ -69,6 +69,19 @@ namespace PackUtils.Test
             Assert.Equal(originalValue.Replace(" ", "_").Replace("-", "_"), newValue);
         }
 
+        [Fact]
+        public static void ToSnakeCase_Should_Return_OriginalString_In_Snake_Case()
+        {
+            // arrange
+            string originalValue = "MyProperty";
+
+            // act
+            var newValue = originalValue.ToSnakeCase();
+
+            // assert
+            Assert.Equal("my_property", newValue);
+        }
+
         [Theory]
         [InlineData("âÂéío123 lçüa", "aAeio123 lcua")]
         [InlineData("lcua", "lcua")]

@@ -156,6 +156,38 @@ namespace PackUtils
         }
 
         /// <summary>
+        /// Deserialize json in recursive Dictionary[string,object] in snake case
+        /// </summary>
+        /// <param name="token"></param>
+        /// <param name="blackList"></param>
+        public static object DeserializeAsObjectInSnakeCase(this string json)
+        {
+            return DeserializeAsObjectCoreInSnakeCase(JToken.Parse(json));
+        }
+
+        /// <summary>
+        /// Cast jtoken to snake case object
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        private static object DeserializeAsObjectCoreInSnakeCase(JToken token)
+        {
+            switch (token.Type)
+            {
+                case JTokenType.Object:
+                    return token.Children<JProperty>()
+                                .ToDictionary(prop => prop.Name.ToSnakeCase(),
+                                              prop => DeserializeAsObjectCoreInSnakeCase(prop.Value));
+
+                case JTokenType.Array:
+                    return token.Select(DeserializeAsObjectCoreInSnakeCase).ToList();
+
+                default:
+                    return ((JValue)token).Value;
+            }
+        }
+
+        /// <summary>
         /// Mask fields
         /// </summary>
         /// <param name="json"></param>
