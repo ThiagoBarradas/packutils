@@ -77,8 +77,12 @@ namespace PackUtils
         /// <returns></returns>
         public static string ToSnakeCase(this string text)
         {
-            if (string.IsNullOrEmpty(text)) return null;
-            return string.Concat(text.Select((_char, i) => i > 0 && char.IsUpper(_char) ? $"_{_char.ToString()}" : _char.ToString())).ToLower();
+            if (string.IsNullOrEmpty(text))
+            {
+                return null;
+            }
+
+            return string.Concat(text.Select((_char, i) => i > 0 && char.IsUpper(_char) ? $"_{_char.ToString()}" : _char.ToString())).ToLowerInvariant();
         }
     }
 }
