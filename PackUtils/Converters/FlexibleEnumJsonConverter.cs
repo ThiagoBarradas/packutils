@@ -3,7 +3,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 
-namespace PackUtils
+namespace PackUtils.Converters
 {
     /// <summary>
     ///  Flexible enum converter for newtonsoft
