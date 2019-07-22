@@ -317,7 +317,7 @@ namespace PackUtils.Test.Converters
             [JsonConverter(typeof(DateConverter))]
             public DateTime OnlyDate { get; set; }
 
-            [JsonConverter(typeof(DateConverter))]
+            [JsonConverter(typeof(DateConverter), "yyyy-MM-dd")]
             public DateTime? OnlyDateNullable { get; set; }
         }
     }
