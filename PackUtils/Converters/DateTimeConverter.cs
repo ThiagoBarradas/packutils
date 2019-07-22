@@ -36,9 +36,9 @@ namespace PackUtils.Converters
 
             var date = DateTime.Parse(reader.Value.ToString());
 
-            var utcDate = TimeZoneInfo.ConvertTimeToUtc(date, GetCurrentTimeZoneInfo());
+            date = TimeZoneInfo.ConvertTimeToUtc(date, GetCurrentTimeZoneInfo());
 
-            return utcDate;
+            return date;
         }
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
@@ -48,6 +48,7 @@ namespace PackUtils.Converters
             if (value != null)
             {
                 var originalDate = DateTime.Parse(value.ToString());
+
                 convertedDate = TimeZoneInfo.ConvertTimeFromUtc(originalDate, this.GetCurrentTimeZoneInfo());
             }
 
@@ -57,6 +58,51 @@ namespace PackUtils.Converters
         private TimeZoneInfo GetCurrentTimeZoneInfo()
         {
             return this.GetTimeZoneInfo?.Invoke() ?? DefaultTimeZone;
+        }
+    }
+
+    public class DateConverter : JsonConverter
+    {
+        public static string DefaultFormat = "yyyy-MM-dd";
+
+        public string Format { get; set; }
+
+        public DateConverter() { }
+
+        public DateConverter(string format)
+        {
+            this.Format = format;
+        }
+
+        public override bool CanConvert(Type objectType)
+        {
+            return
+                (typeof(DateTime).IsAssignableFrom(objectType)) ||
+                (typeof(DateTime?).IsAssignableFrom(objectType));
+        }
+
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        {
+            if (string.IsNullOrWhiteSpace(reader.Value?.ToString()))
+            {
+                return null;
+            }
+
+            var date = DateTime.Parse(reader.Value.ToString());
+
+            return date.Date;
+        }
+
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+        {
+            DateTime? convertedDate = null;
+
+            if (value != null)
+            {
+                convertedDate = DateTime.Parse(value.ToString());
+            }
+
+            writer.WriteValue(convertedDate?.ToString(this.Format ?? DefaultFormat));
         }
     }
 }
