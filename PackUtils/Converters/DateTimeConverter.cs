@@ -1,5 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Http;
+using Nancy;
+using Newtonsoft.Json;
 using System;
+using System.Linq;
 
 namespace PackUtils.Converters
 {
@@ -36,7 +39,7 @@ namespace PackUtils.Converters
 
             var date = DateTime.Parse(reader.Value.ToString());
 
-            date = TimeZoneInfo.ConvertTimeToUtc(date, GetCurrentTimeZoneInfo());
+            date = TimeZoneInfo.ConvertTimeToUtc(date, GetCurrentTimeZoneInfoInvokingFunction());
 
             return date;
         }
@@ -49,13 +52,41 @@ namespace PackUtils.Converters
             {
                 var originalDate = DateTime.Parse(value.ToString());
 
-                convertedDate = TimeZoneInfo.ConvertTimeFromUtc(originalDate, this.GetCurrentTimeZoneInfo());
+                convertedDate = TimeZoneInfo.ConvertTimeFromUtc(originalDate, this.GetCurrentTimeZoneInfoInvokingFunction());
             }
 
             writer.WriteValue(convertedDate);
         }
 
-        private TimeZoneInfo GetCurrentTimeZoneInfo()
+        public TimeZoneInfo GetTimeZoneByAspNetHeader(IHttpContextAccessor httpContextAccessor, string headerName)
+        {
+            var httpContext = httpContextAccessor.HttpContext;
+
+            try
+            {
+                var timezone = httpContext.Request.Headers[headerName];
+                return TimeZoneInfo.FindSystemTimeZoneById(timezone);
+            }
+            catch (Exception)
+            {
+                return DefaultTimeZone;
+            }
+        }
+
+        public TimeZoneInfo GetTimeZoneByNancyHeader(NancyContext nancyContext, string headerName)
+        {
+            try
+            {
+                var timezone = nancyContext.Request.Headers[headerName].FirstOrDefault();
+                return TimeZoneInfo.FindSystemTimeZoneById(timezone);
+            }
+            catch (Exception)
+            {
+                return DefaultTimeZone;
+            }
+        }
+
+        private TimeZoneInfo GetCurrentTimeZoneInfoInvokingFunction()
         {
             return this.GetTimeZoneInfo?.Invoke() ?? DefaultTimeZone;
         }
