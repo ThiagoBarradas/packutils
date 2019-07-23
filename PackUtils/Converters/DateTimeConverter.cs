@@ -58,7 +58,7 @@ namespace PackUtils.Converters
             writer.WriteValue(convertedDate);
         }
 
-        public TimeZoneInfo GetTimeZoneByAspNetHeader(IHttpContextAccessor httpContextAccessor, string headerName)
+        public static TimeZoneInfo GetTimeZoneByAspNetHeader(IHttpContextAccessor httpContextAccessor, string headerName)
         {
             var httpContext = httpContextAccessor.HttpContext;
 
@@ -73,7 +73,7 @@ namespace PackUtils.Converters
             }
         }
 
-        public TimeZoneInfo GetTimeZoneByNancyHeader(NancyContext nancyContext, string headerName)
+        public static TimeZoneInfo GetTimeZoneByNancyHeader(NancyContext nancyContext, string headerName)
         {
             try
             {
