@@ -3,6 +3,7 @@ using PackUtils.Converters;
 using System;
 using System.Diagnostics;
 using System.Linq;
+using TimeZoneConverter;
 using Xunit;
 
 namespace PackUtils.Test.Converters
@@ -10,6 +11,7 @@ namespace PackUtils.Test.Converters
     public class DateTimeConverterTests
     {
         [Theory]
+        [InlineData("America/Santiago", "2019-07-22T13:00:00", null, "2019-07-22T17:00:00.000Z", null)] // -04
         [InlineData("E. South America Standard Time", "2019-07-22T22:00:00", "2019-07-22T23:00:00", "2019-07-23T01:00:00.000Z", "2019-07-23T02:00:00.000Z")] // -03 with default
         [InlineData("E. South America Standard Time", "2019-07-22T00:00:00", "2019-07-22T01:00:00", "2019-07-22T03:00:00.000Z", "2019-07-22T04:00:00.000Z")] // -03 with default
         [InlineData("Pacific SA Standard Time","2019-07-22T13:00:00", null, "2019-07-22T17:00:00.000Z", null)] // -04
@@ -28,7 +30,7 @@ namespace PackUtils.Test.Converters
             // arrange
             var converter = (string.IsNullOrWhiteSpace(timeZone))
                 ? new DateTimeConverter()
-                : new DateTimeConverter(() => TimeZoneInfo.FindSystemTimeZoneById(timeZone));
+                : new DateTimeConverter(() => TZConvert.GetTimeZoneInfo(timeZone));
 
             var originalObject = new DateTimeClassTest
             {
@@ -83,7 +85,7 @@ namespace PackUtils.Test.Converters
             // arrange
             var converter = (string.IsNullOrWhiteSpace(timeZone))
                 ? new DateTimeConverter()
-                : new DateTimeConverter(() => TimeZoneInfo.FindSystemTimeZoneById(timeZone));
+                : new DateTimeConverter(() => TZConvert.GetTimeZoneInfo(timeZone));
 
             var originalObject = new DateTimeClassTest
             {
@@ -172,7 +174,7 @@ namespace PackUtils.Test.Converters
             // arrange
             var converter = (string.IsNullOrWhiteSpace(timeZone))
                 ? new DateTimeConverter()
-                : new DateTimeConverter(() => TimeZoneInfo.FindSystemTimeZoneById(timeZone));
+                : new DateTimeConverter(() => TZConvert.GetTimeZoneInfo(timeZone));
 
             var originalObject = new DateTimeClassTest
             {
@@ -213,7 +215,7 @@ namespace PackUtils.Test.Converters
             // arrange
             var converter = (string.IsNullOrWhiteSpace(timeZone))
                 ? new DateTimeConverter()
-                : new DateTimeConverter(() => TimeZoneInfo.FindSystemTimeZoneById(timeZone));
+                : new DateTimeConverter(() => TZConvert.GetTimeZoneInfo(timeZone));
 
             var originalObject = new DateTimeClassTest
             {
@@ -251,7 +253,7 @@ namespace PackUtils.Test.Converters
             // arrange
             var converter = (string.IsNullOrWhiteSpace(timeZone))
                 ? new DateTimeConverter()
-                : new DateTimeConverter(() => TimeZoneInfo.FindSystemTimeZoneById(timeZone));
+                : new DateTimeConverter(() => TZConvert.GetTimeZoneInfo(timeZone));
 
             var originalObject = new DateTimeClassTest
             {
@@ -291,7 +293,7 @@ namespace PackUtils.Test.Converters
             // arrange
             var converter = (string.IsNullOrWhiteSpace(timeZone))
                 ? new DateTimeConverter()
-                : new DateTimeConverter(() => TimeZoneInfo.FindSystemTimeZoneById(timeZone));
+                : new DateTimeConverter(() => TZConvert.GetTimeZoneInfo(timeZone));
 
             var originalObject = new DateTimeClassTest
             {

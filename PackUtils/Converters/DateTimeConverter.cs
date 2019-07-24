@@ -3,6 +3,7 @@ using Nancy;
 using Newtonsoft.Json;
 using System;
 using System.Linq;
+using TimeZoneConverter;
 
 namespace PackUtils.Converters
 {
@@ -12,13 +13,13 @@ namespace PackUtils.Converters
     /// </summary>
     public class DateTimeConverter : JsonConverter
     {
-        public static TimeZoneInfo DefaultTimeZone = TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time");
+        public static System.TimeZoneInfo DefaultTimeZone = TZConvert.GetTimeZoneInfo("E. South America Standard Time");
 
-        public Func<TimeZoneInfo> GetTimeZoneInfo { get; set; }
+        public Func<System.TimeZoneInfo> GetTimeZoneInfo { get; set; }
 
         public DateTimeConverter() { }
 
-        public DateTimeConverter(Func<TimeZoneInfo> getTimeZoneInfo)
+        public DateTimeConverter(Func<System.TimeZoneInfo> getTimeZoneInfo)
         {
             this.GetTimeZoneInfo = getTimeZoneInfo;
         }
@@ -39,7 +40,7 @@ namespace PackUtils.Converters
 
             var date = DateTime.Parse(reader.Value.ToString());
 
-            date = TimeZoneInfo.ConvertTimeToUtc(date, GetCurrentTimeZoneInfoInvokingFunction());
+            date = System.TimeZoneInfo.ConvertTimeToUtc(date, (System.TimeZoneInfo)GetCurrentTimeZoneInfoInvokingFunction());
 
             return date;
         }
@@ -52,7 +53,7 @@ namespace PackUtils.Converters
             {
                 var originalDate = DateTime.Parse(value.ToString());
 
-                convertedDate = TimeZoneInfo.ConvertTimeFromUtc(originalDate, this.GetCurrentTimeZoneInfoInvokingFunction());
+                convertedDate = System.TimeZoneInfo.ConvertTimeFromUtc(originalDate, (System.TimeZoneInfo)this.GetCurrentTimeZoneInfoInvokingFunction());
             }
 
             writer.WriteValue(convertedDate);
@@ -65,7 +66,7 @@ namespace PackUtils.Converters
             try
             {
                 var timezone = httpContext.Request.Headers[headerName];
-                return TimeZoneInfo.FindSystemTimeZoneById(timezone);
+                return TZConvert.GetTimeZoneInfo(timezone);
             }
             catch (Exception)
             {
@@ -78,7 +79,7 @@ namespace PackUtils.Converters
             try
             {
                 var timezone = nancyContext.Request.Headers[headerName].FirstOrDefault();
-                return TimeZoneInfo.FindSystemTimeZoneById(timezone);
+                return TZConvert.GetTimeZoneInfo(timezone);
             }
             catch (Exception)
             {
