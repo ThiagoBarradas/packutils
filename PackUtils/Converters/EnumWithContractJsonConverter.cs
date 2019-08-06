@@ -31,11 +31,12 @@ namespace PackUtils.Converters
 
             if (reader.TokenType == JsonToken.String)
             {
-                string enumText = reader.Value.ToString().Replace("_","");
+                string enumText = reader.Value.ToString().ToLowerCase();
 
                 if (!string.IsNullOrEmpty(enumText))
                 {
                     string match = names
+                        .Select(r => r.ToLowerCase())
                         .Where(n => string.Equals(n, enumText, StringComparison.OrdinalIgnoreCase))
                         .FirstOrDefault();
 
@@ -86,7 +87,7 @@ namespace PackUtils.Converters
             }
             else if (serializer.ContractResolver is LowerCasePropertyNamesContractResolver)
             {
-                finalValue = finalValue.ToLowerInvariant();
+                finalValue = finalValue.ToLowerCase();
             }
 
             writer.WriteValue(finalValue);

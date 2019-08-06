@@ -119,5 +119,20 @@ namespace PackUtils
 
             return char.ToLowerInvariant(finalValue[0]) + finalValue.Substring(1);
         }
+
+        /// <summary>
+        /// To lower case
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        public static string ToLowerCase(this string text)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                return null;
+            }
+
+            return text.ToLowerInvariant().Replace("_", "");
+        }
     }
 }
