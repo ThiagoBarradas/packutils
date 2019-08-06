@@ -4,6 +4,41 @@ namespace PackUtils.Test
 {
     public static class StringUtilityTest
     {
+        [Theory]
+        [InlineData(null, null)]
+        [InlineData("", null)]
+        [InlineData("test", "test")]
+        [InlineData("test_testt", "testTestt")]
+        [InlineData("Test", "test")]
+        [InlineData("TestTTT", "testTtt")]
+        [InlineData("_Test_TTT_", "testTtt")]
+        [InlineData("test__testr", "testTestr")]
+        public static void ToCamelCase_Should_Works(string text, string result)
+        {
+            // arrange & act
+            var newValue = text.ToCamelCase();
+
+            // assert
+            Assert.Equal(result, newValue);
+        }
+
+        [Theory]
+        [InlineData(null, null)]
+        [InlineData("", null)]
+        [InlineData("test", "test")]
+        [InlineData("testTestt", "test_testt")]
+        [InlineData("Test", "test")]
+        [InlineData("TestTTT", "test_t_t_t")]
+        [InlineData("testTestr", "test_testr")]
+        public static void ToSnakeCase_Should_Works(string text, string result)
+        {
+            // arrange & act
+            var newValue = text.ToSnakeCase();
+
+            // assert
+            Assert.Equal(result, newValue);
+        }
+
         [Fact]
         public static void Replace_Should_Return_Empty_String_With_Empty_OriginalValue()
         {

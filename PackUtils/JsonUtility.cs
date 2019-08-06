@@ -21,10 +21,7 @@ namespace PackUtils
             {
                 var settings = new JsonSerializerSettings();
 
-                settings.ContractResolver = new DefaultContractResolver
-                {
-                    NamingStrategy = new SnakeCaseNamingStrategy()
-                };
+                settings.ContractResolver = new SnakeCasePropertyNamesContractResolver();
                 settings.Converters.Add(new StringEnumConverter());
                 settings.NullValueHandling = NullValueHandling.Ignore;
 
@@ -58,10 +55,7 @@ namespace PackUtils
             {
                 var settings = new JsonSerializerSettings();
 
-                settings.ContractResolver = new DefaultContractResolver
-                {
-                    NamingStrategy = new LowerCaseNamingResolver()
-                };
+                settings.ContractResolver = new LowerCasePropertyNamesContractResolver();
                 settings.Converters.Add(new StringEnumConverter());
                 settings.NullValueHandling = NullValueHandling.Ignore;
 
@@ -94,10 +88,7 @@ namespace PackUtils
             {
                 var serializer = new JsonSerializer();
                 serializer.NullValueHandling = NullValueHandling.Ignore;
-                serializer.ContractResolver = new DefaultContractResolver
-                {
-                    NamingStrategy = new SnakeCaseNamingStrategy()
-                };
+                serializer.ContractResolver = new SnakeCasePropertyNamesContractResolver();
                 serializer.Converters.Add(new StringEnumConverter());
 
                 return serializer;
@@ -113,10 +104,7 @@ namespace PackUtils
             {
                 var serializer = new JsonSerializer();
                 serializer.NullValueHandling = NullValueHandling.Ignore;
-                serializer.ContractResolver = new DefaultContractResolver
-                {
-                    NamingStrategy = new LowerCaseNamingResolver()
-                };
+                serializer.ContractResolver = new LowerCasePropertyNamesContractResolver();
                 serializer.Converters.Add(new StringEnumConverter());
 
                 return serializer;
@@ -187,6 +175,28 @@ namespace PackUtils
         protected override string ResolvePropertyName(string name)
         {
             return name.ToLowerInvariant();
+        }
+    }
+
+    /// <summary>
+    /// Snake case contract resolver
+    /// </summary>
+    public class SnakeCasePropertyNamesContractResolver : DefaultContractResolver
+    {
+        public SnakeCasePropertyNamesContractResolver()
+        {
+            this.NamingStrategy = new SnakeCaseNamingStrategy();
+        }
+    }
+
+    /// <summary>
+    /// Lowercase contract resolver
+    /// </summary>
+    public class LowerCasePropertyNamesContractResolver : DefaultContractResolver
+    {
+        public LowerCasePropertyNamesContractResolver()
+        {
+            this.NamingStrategy = new LowerCaseNamingResolver();
         }
     }
 }
