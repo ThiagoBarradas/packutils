@@ -36,8 +36,7 @@ namespace PackUtils.Converters
                 if (!string.IsNullOrEmpty(enumText))
                 {
                     string match = names
-                        .Select(r => r.ToLowerCase())
-                        .Where(n => string.Equals(n, enumText, StringComparison.OrdinalIgnoreCase))
+                        .Where(n => string.Equals(n.ToLowerCase(), enumText, StringComparison.OrdinalIgnoreCase))
                         .FirstOrDefault();
 
                     if (match != null)
