@@ -83,7 +83,11 @@ namespace PackUtils
                 return null;
             }
 
-            return string.Concat(text.Select((_char, i) => i > 0 && char.IsUpper(_char) ? $"_{_char.ToString()}" : _char.ToString())).ToLower();
+            text = string.Concat(text.Select((_char, i) => i > 0 && char.IsUpper(_char) ? $"_{_char.ToString()}" : _char.ToString())).ToLower();
+
+            text = Regex.Replace(text, @"\d+", m => "_" + m.Value);
+
+            return text;
         }
 
         /// <summary>

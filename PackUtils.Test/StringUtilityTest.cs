@@ -29,6 +29,7 @@ namespace PackUtils.Test
         [InlineData("testTestt", "test_testt")]
         [InlineData("Test", "test")]
         [InlineData("TestTTT", "test_t_t_t")]
+        [InlineData("LineLine123123", "line_line_123123")]
         [InlineData("testTestr", "test_testr")]
         public static void ToSnakeCase_Should_Works(string text, string result)
         {
