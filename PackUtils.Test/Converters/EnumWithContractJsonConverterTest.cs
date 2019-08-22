@@ -56,7 +56,7 @@ namespace PackUtils.Test
 
             // assert
             Assert.NotNull(obj);
-            Assert.Equal("{\"my_enum\":\"value_test1\",\"my_enum_nullable\":\"value_test2\"}", jsonResult);
+            Assert.Equal("{\"my_enum\":\"value_test_1\",\"my_enum_nullable\":\"value_test_2\"}", jsonResult);
             Assert.Equal(TestContractEnum.ValueTest1, objResult.MyEnum);
             Assert.Equal(TestContractEnum.ValueTest2, objResult.MyEnumNullable.Value);
             Assert.Null(objResult.MyEnumNullableWithNull);
