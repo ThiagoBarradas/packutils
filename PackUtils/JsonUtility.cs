@@ -3,6 +3,8 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
+using PackUtils.Converters;
+using System;
 using System.Linq;
 
 namespace PackUtils
@@ -64,6 +66,23 @@ namespace PackUtils
         }
 
         /// <summary>
+        /// Original case json serializer settings
+        /// </summary>
+        public static JsonSerializerSettings OriginalCaseJsonSerializerSettings
+        {
+            get
+            {
+                var settings = new JsonSerializerSettings();
+
+                settings.ContractResolver = new OriginalCasePropertyNamesContractResolver();
+                settings.Converters.Add(new StringEnumConverter());
+                settings.NullValueHandling = NullValueHandling.Ignore;
+
+                return settings;
+            }
+        }
+
+        /// <summary>
         /// Camel case json serialize
         /// </summary>
         public static JsonSerializer CamelCaseJsonSerializer
@@ -112,10 +131,25 @@ namespace PackUtils
         }
 
         /// <summary>
+        /// Original json serialize
+        /// </summary>
+        public static JsonSerializer OriginalCaseJsonSerializer
+        {
+            get
+            {
+                var serializer = new JsonSerializer();
+                serializer.NullValueHandling = NullValueHandling.Ignore;
+                serializer.ContractResolver = new OriginalCasePropertyNamesContractResolver();
+                serializer.Converters.Add(new StringEnumConverter());
+
+                return serializer;
+            }
+        }
+
+        /// <summary>
         /// Deserialize json in recursive Dictionary[string,object]
         /// </summary>
-        /// <param name="token"></param>
-        /// <param name="blackList"></param>
+        /// <param name="json"></param>
         public static object DeserializeAsObject(this string json)
         {
             return DeserializeAsObjectCore(JToken.Parse(json));
@@ -165,6 +199,60 @@ namespace PackUtils
         {
             return json.MaskFields(blacklist, mask);
         }
+
+        /// <summary>
+        /// Use json as flexible converter
+        /// </summary>
+        /// <param name="jsonSerializer"></param>
+        /// <returns></returns>
+        public static JsonSerializer UseFlexibleEnumJsonConverter(this JsonSerializer jsonSerializer)
+        {
+            jsonSerializer.Converters.Clear();
+            jsonSerializer.Converters.Add(new FlexibleEnumJsonConverter());
+
+            return jsonSerializer;
+        }
+
+        /// <summary>
+        /// Use json as flexible converter
+        /// </summary>
+        /// <param name="jsonSerializerSettings"></param>
+        /// <returns></returns>
+        public static JsonSerializerSettings UseFlexibleEnumJsonConverter(this JsonSerializerSettings jsonSerializerSettings)
+        {
+            jsonSerializerSettings.Converters.Clear();
+            jsonSerializerSettings.Converters.Add(new FlexibleEnumJsonConverter());
+
+            return jsonSerializerSettings;
+        }
+
+        /// <summary>
+        /// Try deserialize or ignore with cannot be possible
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static T TryDeserialize<T>(this string value, JsonSerializerSettings jsonSerializerSettings = null)
+        {
+            if (string.IsNullOrWhiteSpace(value) == false)
+            {
+                if (jsonSerializerSettings == null)
+                {
+                    jsonSerializerSettings = JsonUtility.SnakeCaseJsonSerializerSettings;
+                }
+
+                try
+                {
+                    return JsonConvert.DeserializeObject<T>(value, jsonSerializerSettings);
+                }
+                catch (Exception)
+                {
+                    // Invalid data can be ignored
+                }
+            }
+
+            return default(T);
+        }
     }
 
     /// <summary>
@@ -179,17 +267,6 @@ namespace PackUtils
     }
 
     /// <summary>
-    /// Snake case contract resolver
-    /// </summary>
-    public class SnakeCasePropertyNamesContractResolver : DefaultContractResolver
-    {
-        public SnakeCasePropertyNamesContractResolver()
-        {
-            this.NamingStrategy = new SnakeCaseNamingStrategy();
-        }
-    }
-
-    /// <summary>
     /// Lowercase contract resolver
     /// </summary>
     public class LowerCasePropertyNamesContractResolver : DefaultContractResolver
@@ -197,6 +274,39 @@ namespace PackUtils
         public LowerCasePropertyNamesContractResolver()
         {
             this.NamingStrategy = new LowerCaseNamingResolver();
+        }
+    }
+
+    /// <summary>
+    /// Resolve property names original name
+    /// </summary>
+    public class OriginalCaseNamingResolver : NamingStrategy
+    {
+        protected override string ResolvePropertyName(string name)
+        {
+            return name;
+        }
+    }
+
+    /// <summary>
+    /// Original contract resolver
+    /// </summary>
+    public class OriginalCasePropertyNamesContractResolver : DefaultContractResolver
+    {
+        public OriginalCasePropertyNamesContractResolver()
+        {
+            this.NamingStrategy = new OriginalCaseNamingResolver();
+        }
+    }
+
+    /// <summary>
+    /// Snake case contract resolver
+    /// </summary>
+    public class SnakeCasePropertyNamesContractResolver : DefaultContractResolver
+    {
+        public SnakeCasePropertyNamesContractResolver()
+        {
+            this.NamingStrategy = new SnakeCaseNamingStrategy();
         }
     }
 }

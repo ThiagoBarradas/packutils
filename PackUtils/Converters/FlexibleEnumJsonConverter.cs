@@ -35,7 +35,7 @@ namespace PackUtils.Converters
                 if (!string.IsNullOrEmpty(enumText))
                 {
                     string match = names
-                        .Where(n => string.Equals(n, enumText, StringComparison.OrdinalIgnoreCase))
+                        .Where(n => string.Equals(n.Replace("_", ""), enumText.Replace("_", ""), StringComparison.OrdinalIgnoreCase))
                         .FirstOrDefault();
 
                     if (match != null)
@@ -57,7 +57,7 @@ namespace PackUtils.Converters
             if (!isNullable)
             {
                 string defaultName = names
-                    .Where(n => string.Equals(n, "Undefined", StringComparison.OrdinalIgnoreCase))
+                    .Where(n => string.Equals(n.Replace("_", ""), "Undefined", StringComparison.OrdinalIgnoreCase))
                     .FirstOrDefault();
 
                 if (defaultName == null)
