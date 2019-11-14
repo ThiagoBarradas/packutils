@@ -50,6 +50,10 @@ namespace PackUtils.MongoSerializer
 
                 context.Writer.WriteEndArray();
             }
+            else
+            {
+                context.Writer.WriteNull();
+            }
         }
 
         public bool TryGetItemSerializationInfo(out BsonSerializationInfo serializationInfo)
