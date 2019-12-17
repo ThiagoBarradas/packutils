@@ -14,22 +14,38 @@ namespace PackUtils
     /// </summary>
     public static class JsonUtility
     {
+        private readonly static object Lock = new object();
+
         /// <summary>
         /// Snake case json serializer settings
         /// </summary>
+        
         public static JsonSerializerSettings SnakeCaseJsonSerializerSettings
         {
             get
             {
-                var settings = new JsonSerializerSettings();
+                if (_snakeCaseJsonSerializerSettings == null)
+                {
+                    lock (Lock)
+                    {
+                        if (_snakeCaseJsonSerializerSettings == null)
+                        {
+                            var settings = new JsonSerializerSettings();
 
-                settings.ContractResolver = new SnakeCasePropertyNamesContractResolver();
-                settings.Converters.Add(new StringEnumConverter());
-                settings.NullValueHandling = NullValueHandling.Ignore;
+                            settings.ContractResolver = new SnakeCasePropertyNamesContractResolver();
+                            settings.Converters.Add(new StringEnumConverter());
+                            settings.NullValueHandling = NullValueHandling.Ignore;
 
-                return settings;
+                            _snakeCaseJsonSerializerSettings = settings;
+                        }
+                    }   
+                }
+
+                return _snakeCaseJsonSerializerSettings;
             }
         }
+
+        private static JsonSerializerSettings _snakeCaseJsonSerializerSettings;
 
         /// <summary>
         /// Camel case json serializer settings
@@ -38,15 +54,28 @@ namespace PackUtils
         {
             get
             {
-                var settings = new JsonSerializerSettings();
+                if (_camelCaseJsonSerializerSettings == null)
+                {
+                    lock (Lock)
+                    {
+                        if (_camelCaseJsonSerializerSettings == null)
+                        {
+                            var settings = new JsonSerializerSettings();
 
-                settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-                settings.Converters.Add(new StringEnumConverter());
-                settings.NullValueHandling = NullValueHandling.Ignore;
+                            settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                            settings.Converters.Add(new StringEnumConverter());
+                            settings.NullValueHandling = NullValueHandling.Ignore;
 
-                return settings;
+                            _camelCaseJsonSerializerSettings = settings;
+                        }
+                    }
+                }
+
+                return _camelCaseJsonSerializerSettings;
             }
         }
+
+        public static JsonSerializerSettings _camelCaseJsonSerializerSettings;
 
         /// <summary>
         /// Lower case json serializer settings
@@ -55,15 +84,29 @@ namespace PackUtils
         {
             get
             {
-                var settings = new JsonSerializerSettings();
+                if (_lowerCaseJsonSerializerSettings == null)
+                {
+                    lock (Lock)
+                    {
+                        if (_lowerCaseJsonSerializerSettings == null)
+                        {
+                            var settings = new JsonSerializerSettings();
 
-                settings.ContractResolver = new LowerCasePropertyNamesContractResolver();
-                settings.Converters.Add(new StringEnumConverter());
-                settings.NullValueHandling = NullValueHandling.Ignore;
+                            settings.ContractResolver = new LowerCasePropertyNamesContractResolver();
+                            settings.Converters.Add(new StringEnumConverter());
+                            settings.NullValueHandling = NullValueHandling.Ignore;
 
-                return settings;
+                            _lowerCaseJsonSerializerSettings = settings;
+                        }
+                    }
+                }
+
+
+                return _lowerCaseJsonSerializerSettings;
             }
         }
+
+        private static JsonSerializerSettings _lowerCaseJsonSerializerSettings;
 
         /// <summary>
         /// Original case json serializer settings
@@ -72,15 +115,28 @@ namespace PackUtils
         {
             get
             {
-                var settings = new JsonSerializerSettings();
+                if (_originalCaseJsonSerializerSettings == null)
+                {
+                    lock (Lock)
+                    {
+                        if (_originalCaseJsonSerializerSettings == null)
+                        {
+                            var settings = new JsonSerializerSettings();
 
-                settings.ContractResolver = new OriginalCasePropertyNamesContractResolver();
-                settings.Converters.Add(new StringEnumConverter());
-                settings.NullValueHandling = NullValueHandling.Ignore;
+                            settings.ContractResolver = new OriginalCasePropertyNamesContractResolver();
+                            settings.Converters.Add(new StringEnumConverter());
+                            settings.NullValueHandling = NullValueHandling.Ignore;
 
-                return settings;
+                            _originalCaseJsonSerializerSettings = settings;
+                        }
+                    }
+                }
+
+                return _originalCaseJsonSerializerSettings;
             }
         }
+
+        private static JsonSerializerSettings _originalCaseJsonSerializerSettings;
 
         /// <summary>
         /// Camel case json serialize
@@ -105,14 +161,27 @@ namespace PackUtils
         {
             get
             {
-                var serializer = new JsonSerializer();
-                serializer.NullValueHandling = NullValueHandling.Ignore;
-                serializer.ContractResolver = new SnakeCasePropertyNamesContractResolver();
-                serializer.Converters.Add(new StringEnumConverter());
+                if (_snakeCaseJsonSerializer == null)
+                {
+                    lock (Lock)
+                    {
+                        if (_snakeCaseJsonSerializer == null)
+                        {
+                            var serializer = new JsonSerializer();
+                            serializer.NullValueHandling = NullValueHandling.Ignore;
+                            serializer.ContractResolver = new SnakeCasePropertyNamesContractResolver();
+                            serializer.Converters.Add(new StringEnumConverter());
 
-                return serializer;
+                            _snakeCaseJsonSerializer = serializer;
+                        }
+                    }
+                }
+
+                return _snakeCaseJsonSerializer;
             }
         }
+
+        private static JsonSerializer _snakeCaseJsonSerializer;
 
         /// <summary>
         /// Lower case json serialize
@@ -121,14 +190,27 @@ namespace PackUtils
         {
             get
             {
-                var serializer = new JsonSerializer();
-                serializer.NullValueHandling = NullValueHandling.Ignore;
-                serializer.ContractResolver = new LowerCasePropertyNamesContractResolver();
-                serializer.Converters.Add(new StringEnumConverter());
+                if (_lowerCaseJsonSerializer == null)
+                {
+                    lock (Lock)
+                    {
+                        if (_lowerCaseJsonSerializer == null)
+                        {
+                            var serializer = new JsonSerializer();
+                            serializer.NullValueHandling = NullValueHandling.Ignore;
+                            serializer.ContractResolver = new LowerCasePropertyNamesContractResolver();
+                            serializer.Converters.Add(new StringEnumConverter());
 
-                return serializer;
+                            _lowerCaseJsonSerializer = serializer;
+                        }
+                    }
+                }
+
+                return _lowerCaseJsonSerializer;
             }
         }
+
+        private static JsonSerializer _lowerCaseJsonSerializer;
 
         /// <summary>
         /// Original json serialize
@@ -137,14 +219,27 @@ namespace PackUtils
         {
             get
             {
-                var serializer = new JsonSerializer();
-                serializer.NullValueHandling = NullValueHandling.Ignore;
-                serializer.ContractResolver = new OriginalCasePropertyNamesContractResolver();
-                serializer.Converters.Add(new StringEnumConverter());
+                if (_originalCaseJsonSerializer == null)
+                {
+                    lock (Lock)
+                    {
+                        if (_originalCaseJsonSerializer == null)
+                        {
+                            var serializer = new JsonSerializer();
+                            serializer.NullValueHandling = NullValueHandling.Ignore;
+                            serializer.ContractResolver = new OriginalCasePropertyNamesContractResolver();
+                            serializer.Converters.Add(new StringEnumConverter());
 
-                return serializer;
+                            _originalCaseJsonSerializer = serializer;
+                        }
+                    }
+                }
+
+                return _originalCaseJsonSerializer;
             }
         }
+
+        private static JsonSerializer _originalCaseJsonSerializer;
 
         /// <summary>
         /// Deserialize json in recursive Dictionary[string,object]
