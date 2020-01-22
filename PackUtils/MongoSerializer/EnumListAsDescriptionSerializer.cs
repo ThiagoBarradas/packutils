@@ -30,6 +30,10 @@ namespace PackUtils.MongoSerializer
 
                     return deserializedEnumList;
 
+                case BsonType.Null:
+                    context.Reader.ReadNull();
+                    return null;
+
                 default:
                     throw new NotImplementedException($"No implementation to deserialize {type}");
             }
@@ -49,6 +53,10 @@ namespace PackUtils.MongoSerializer
                 }
 
                 context.Writer.WriteEndArray();
+            }
+            else
+            {
+                context.Writer.WriteNull();
             }
         }
 
