@@ -19,6 +19,8 @@ namespace PackUtils
                     results.Add(new OpenApiString(enumValue.ToString().ToSnakeCase()));
                 }
 
+                schema.Type = "string";
+                schema.Format = null;
                 schema.Enum = results;
             }
         }
@@ -37,6 +39,8 @@ namespace PackUtils
                     results.Add(new OpenApiString(enumValue.ToString().ToCamelCase()));
                 }
 
+                schema.Type = "string";
+                schema.Format = null;
                 schema.Enum = results;
             }
         }
@@ -55,6 +59,8 @@ namespace PackUtils
                     results.Add(new OpenApiString(enumValue.ToString().ToLowerCase()));
                 }
 
+                schema.Type = "string";
+                schema.Format = null;
                 schema.Enum = results;
             }
         }
