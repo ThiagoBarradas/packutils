@@ -1,6 +1,8 @@
-﻿using Microsoft.OpenApi.Models;
+﻿using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using System.Linq;
+using System;
+using System.Collections.Generic;
 
 namespace PackUtils
 {
@@ -8,7 +10,17 @@ namespace PackUtils
     {
         public void Apply(OpenApiSchema schema, SchemaFilterContext context)
         {
-            schema.Enum = schema.Enum.Select(r => OpenApiAnyFactory.CreateFor(schema, r.ToString().ToSnakeCase())).ToArray();
+            if (schema.Enum?.Count > 0)
+            {
+                IList<IOpenApiAny> results = new List<IOpenApiAny>();
+                var enumValues = Enum.GetValues(context.Type);
+                foreach (var enumValue in enumValues)
+                {
+                    results.Add(new OpenApiString(enumValue.ToString().ToSnakeCase()));
+                }
+
+                schema.Enum = results;
+            }
         }
     }
 
@@ -16,7 +28,17 @@ namespace PackUtils
     {
         public void Apply(OpenApiSchema schema, SchemaFilterContext context)
         {
-            schema.Enum = schema.Enum.Select(r => OpenApiAnyFactory.CreateFor(schema, r.ToString().ToCamelCase())).ToArray();
+            if (schema.Enum?.Count > 0)
+            {
+                IList<IOpenApiAny> results = new List<IOpenApiAny>();
+                var enumValues = Enum.GetValues(context.Type);
+                foreach (var enumValue in enumValues)
+                {
+                    results.Add(new OpenApiString(enumValue.ToString().ToCamelCase()));
+                }
+
+                schema.Enum = results;
+            }
         }
     }
 
@@ -24,7 +46,17 @@ namespace PackUtils
     {
         public void Apply(OpenApiSchema schema, SchemaFilterContext context)
         {
-            schema.Enum = schema.Enum.Select(r => OpenApiAnyFactory.CreateFor(schema, r.ToString().ToLowerCase())).ToArray();
+            if (schema.Enum?.Count > 0)
+            {
+                IList<IOpenApiAny> results = new List<IOpenApiAny>();
+                var enumValues = Enum.GetValues(context.Type);
+                foreach (var enumValue in enumValues)
+                {
+                    results.Add(new OpenApiString(enumValue.ToString().ToLowerCase()));
+                }
+
+                schema.Enum = results;
+            }
         }
     }
 }
