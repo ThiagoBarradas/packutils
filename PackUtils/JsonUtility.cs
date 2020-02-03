@@ -17,9 +17,59 @@ namespace PackUtils
         private readonly static object Lock = new object();
 
         /// <summary>
+        /// Get Newtonsoft JsonSerializerSettings by strategy (snake/snakecase, camel/camelcase, lower/lowercase or default)
+        /// </summary>
+        /// <param name="strategy"></param>
+        /// <returns></returns>
+        public static JsonSerializerSettings GetNewtonsoftJsonSerializerSettings(this string strategy)
+        {
+            strategy = strategy?.ToLowerInvariant().Trim();
+
+            switch (strategy)
+            {
+                case "snake":
+                case "snakecase":
+                    return JsonUtility.SnakeCaseJsonSerializerSettings;
+                case "camel":
+                case "camelcase":
+                    return JsonUtility.CamelCaseJsonSerializerSettings;
+                case "lower":
+                case "lowercase":
+                    return JsonUtility.LowerCaseJsonSerializerSettings;
+                default:
+                    return JsonUtility.OriginalCaseJsonSerializerSettings;
+            }
+        }
+
+        /// <summary>
+        /// Get Newtonsoft JsonSerializer by strategy (snake/snakecase, camel/camelcase, lower/lowercase or default)
+        /// </summary>
+        /// <param name="strategy"></param>
+        /// <returns></returns>
+        public static JsonSerializer GetNewtonsoftJsonSerializer(this string strategy)
+        {
+            strategy = strategy?.ToLowerInvariant().Trim();
+
+            switch (strategy)
+            {
+                case "snake":
+                case "snakecase":
+                    return JsonUtility.SnakeCaseJsonSerializer;
+                case "camel":
+                case "camelcase":
+                    return JsonUtility.CamelCaseJsonSerializer;
+                case "lower":
+                case "lowercase":
+                    return JsonUtility.LowerCaseJsonSerializer;
+                default:
+                    return JsonUtility.OriginalCaseJsonSerializer;
+            }
+        }
+
+        /// <summary>
         /// Snake case json serializer settings
         /// </summary>
-        
+
         public static JsonSerializerSettings SnakeCaseJsonSerializerSettings
         {
             get
