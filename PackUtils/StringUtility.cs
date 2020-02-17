@@ -114,9 +114,10 @@ namespace PackUtils
                 return null;
             }
 
+            text = text.ToCamelCase();
             text = string.Concat(text.Select((_char, i) => i > 0 && char.IsUpper(_char) ? $"_{_char.ToString()}" : _char.ToString())).ToLower();
 
-            text = Regex.Replace(text, @"\d+", m => "_" + m.Value);
+            //text = Regex.Replace(text, @"\d+", m => "_" + m.Value);
 
             return text;
         }
