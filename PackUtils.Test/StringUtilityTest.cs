@@ -23,6 +23,52 @@ namespace PackUtils.Test
         }
 
         [Theory]
+        [InlineData(null, null, null)]
+        [InlineData("camel", null, null)]
+        [InlineData("camel", "", null)]
+        [InlineData("camel", "hello_sir", "helloSir")]
+        [InlineData("camel", "Hello123", "hello123")]
+        [InlineData("camel", "HelloXXX", "helloXxx")]
+        [InlineData("camelcase", null, null)]
+        [InlineData("camelcase", "", null)]
+        [InlineData("camelcase", "hello_sir", "helloSir")]
+        [InlineData("camelcase", "Hello123", "hello123")]
+        [InlineData("camelcase", "HelloXXX", "helloXxx")]
+        [InlineData("snake", null, null)]
+        [InlineData("snake", "", null)]
+        [InlineData("snake", "hello_sir", "hello_sir")]
+        [InlineData("snake", "Hello123", "hello_123")]
+        [InlineData("snake", "HelloXXX", "hello_xxx")]
+        [InlineData("snakecase", null, null)]
+        [InlineData("snakecase", "", null)]
+        [InlineData("snakecase", "hello_sir", "hello_sir")]
+        [InlineData("snakecase", "Hello123", "hello_123")]
+        [InlineData("snakecase", "HelloXXX", "hello_xxx")]
+        [InlineData("lower", null, null)]
+        [InlineData("lower", "", null)]
+        [InlineData("lower", "hello_sir", "hellosir")]
+        [InlineData("lower", "Hello123", "hello123")]
+        [InlineData("lower", "HelloXXX", "helloxxx")]
+        [InlineData("lowercase", null, null)]
+        [InlineData("lowercase", "", null)]
+        [InlineData("lowercase", "hello_sir", "hellosir")]
+        [InlineData("lowercase", "Hello123", "hello123")]
+        [InlineData("lowercase", "HelloXXX", "helloxxx")]
+        [InlineData("huhuhehe", null, null)]
+        [InlineData("huhuhehe", "", null)]
+        [InlineData("huhuhehe", "hello_sir", "helloSir")]
+        [InlineData("huhuhehe", "Hello123", "Hello123")]
+        [InlineData("huhuhehe", "HelloXXX", "HelloXXX")]
+        public static void ToCamel_Should_Works(string strategy, string text, string result)
+        {
+            // arrange & act
+            var newValue = text.ToCase(strategy);
+
+            // assert
+            Assert.Equal(result, newValue);
+        }
+
+        [Theory]
         [InlineData(null, null)]
         [InlineData("", null)]
         [InlineData("test", "test")]

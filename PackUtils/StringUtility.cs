@@ -12,6 +12,37 @@ namespace PackUtils
     public static class StringUtility
     {
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="strategy"></param>
+        /// <returns></returns>
+        public static string ToCase(this string value, string strategy)
+        {
+            if(string.IsNullOrWhiteSpace(value))
+            {
+                return null;
+            }
+
+            strategy = strategy?.ToLowerInvariant().Trim();
+
+            switch (strategy)
+            {
+                case "snake":
+                case "snakecase":
+                    return value.ToSnakeCase();
+                case "camel":
+                case "camelcase":
+                    return value.ToCamelCase();
+                case "lower":
+                case "lowercase":
+                    return value.ToLowerCase();
+                default:
+                    return value;
+            }
+        }
+
+        /// <summary>
         /// Replace multi separators
         /// </summary>
         /// <param name="originalValue"></param>
