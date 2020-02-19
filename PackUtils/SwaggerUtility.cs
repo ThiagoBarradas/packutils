@@ -8,7 +8,7 @@ namespace PackUtils
 {
     public static class SwaggerEnum
     {
-        public static List<string> Enums = new List<string>();
+        public static List<string> Enums;
 
         public static void Apply(OpenApiSchema schema, SchemaFilterContext context, string jsonSerializerCase)
         {
