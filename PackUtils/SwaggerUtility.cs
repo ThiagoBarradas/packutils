@@ -6,9 +6,11 @@ using System.Collections.Generic;
 
 namespace PackUtils
 {
-    public class SnakeEnumSchemaFilter : Swashbuckle.AspNetCore.SwaggerGen.ISchemaFilter
+    public static class SwaggerEnum
     {
-        public void Apply(OpenApiSchema schema, SchemaFilterContext context)
+        public static List<string> Enums = new List<string>();
+
+        public static void Apply(OpenApiSchema schema, SchemaFilterContext context, string jsonSerializerCase)
         {
             if (schema.Enum?.Count > 0)
             {
@@ -16,13 +18,27 @@ namespace PackUtils
                 var enumValues = Enum.GetValues(context.Type);
                 foreach (var enumValue in enumValues)
                 {
-                    results.Add(new OpenApiString(enumValue.ToString().ToSnakeCase()));
+                    var enumValueString = enumValue.ToString().ToCase(jsonSerializerCase);
+                    if (Enums?.Contains(enumValueString) == true)
+                    {
+                        continue;
+                    }
+
+                    results.Add(new OpenApiString(enumValueString));
                 }
 
                 schema.Type = "string";
                 schema.Format = null;
                 schema.Enum = results;
             }
+        }
+    }
+
+    public class SnakeEnumSchemaFilter : Swashbuckle.AspNetCore.SwaggerGen.ISchemaFilter
+    {
+        public void Apply(OpenApiSchema schema, SchemaFilterContext context)
+        {
+            SwaggerEnum.Apply(schema, context, "snakecase");
         }
     }
 
@@ -30,19 +46,7 @@ namespace PackUtils
     {
         public void Apply(OpenApiSchema schema, SchemaFilterContext context)
         {
-            if (schema.Enum?.Count > 0)
-            {
-                IList<IOpenApiAny> results = new List<IOpenApiAny>();
-                var enumValues = Enum.GetValues(context.Type);
-                foreach (var enumValue in enumValues)
-                {
-                    results.Add(new OpenApiString(enumValue.ToString().ToCamelCase()));
-                }
-
-                schema.Type = "string";
-                schema.Format = null;
-                schema.Enum = results;
-            }
+            SwaggerEnum.Apply(schema, context, "camelcase");
         }
     }
 
@@ -50,19 +54,7 @@ namespace PackUtils
     {
         public void Apply(OpenApiSchema schema, SchemaFilterContext context)
         {
-            if (schema.Enum?.Count > 0)
-            {
-                IList<IOpenApiAny> results = new List<IOpenApiAny>();
-                var enumValues = Enum.GetValues(context.Type);
-                foreach (var enumValue in enumValues)
-                {
-                    results.Add(new OpenApiString(enumValue.ToString().ToLowerCase()));
-                }
-
-                schema.Type = "string";
-                schema.Format = null;
-                schema.Enum = results;
-            }
+            SwaggerEnum.Apply(schema, context, "lowercase");
         }
     }
 }
