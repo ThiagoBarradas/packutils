@@ -83,7 +83,7 @@ namespace PackUtils
                             var settings = new JsonSerializerSettings();
 
                             settings.ContractResolver = new SnakeCasePropertyNamesContractResolver();
-                            settings.Converters.Add(new StringEnumConverter());
+                            settings.Converters.Add(new EnumWithContractJsonConverter());
                             settings.NullValueHandling = NullValueHandling.Ignore;
 
                             _snakeCaseJsonSerializerSettings = settings;
@@ -113,7 +113,7 @@ namespace PackUtils
                             var settings = new JsonSerializerSettings();
 
                             settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-                            settings.Converters.Add(new StringEnumConverter());
+                            settings.Converters.Add(new EnumWithContractJsonConverter());
                             settings.NullValueHandling = NullValueHandling.Ignore;
 
                             _camelCaseJsonSerializerSettings = settings;
@@ -143,7 +143,7 @@ namespace PackUtils
                             var settings = new JsonSerializerSettings();
 
                             settings.ContractResolver = new LowerCasePropertyNamesContractResolver();
-                            settings.Converters.Add(new StringEnumConverter());
+                            settings.Converters.Add(new EnumWithContractJsonConverter());
                             settings.NullValueHandling = NullValueHandling.Ignore;
 
                             _lowerCaseJsonSerializerSettings = settings;
@@ -174,7 +174,7 @@ namespace PackUtils
                             var settings = new JsonSerializerSettings();
 
                             settings.ContractResolver = new OriginalCasePropertyNamesContractResolver();
-                            settings.Converters.Add(new StringEnumConverter());
+                            settings.Converters.Add(new EnumWithContractJsonConverter());
                             settings.NullValueHandling = NullValueHandling.Ignore;
 
                             _originalCaseJsonSerializerSettings = settings;
@@ -198,7 +198,8 @@ namespace PackUtils
                 var serializer = new JsonSerializer();
                 serializer.NullValueHandling = NullValueHandling.Ignore;
                 serializer.ContractResolver = new CamelCasePropertyNamesContractResolver();
-                serializer.Converters.Add(new StringEnumConverter());
+                serializer.Converters.Add(new EnumWithContractJsonConverter());
+
 
                 return serializer;
             }
@@ -220,8 +221,7 @@ namespace PackUtils
                             var serializer = new JsonSerializer();
                             serializer.NullValueHandling = NullValueHandling.Ignore;
                             serializer.ContractResolver = new SnakeCasePropertyNamesContractResolver();
-                            serializer.Converters.Add(new StringEnumConverter());
-
+                            serializer.Converters.Add(new EnumWithContractJsonConverter());
                             _snakeCaseJsonSerializer = serializer;
                         }
                     }
@@ -249,8 +249,7 @@ namespace PackUtils
                             var serializer = new JsonSerializer();
                             serializer.NullValueHandling = NullValueHandling.Ignore;
                             serializer.ContractResolver = new LowerCasePropertyNamesContractResolver();
-                            serializer.Converters.Add(new StringEnumConverter());
-
+                            serializer.Converters.Add(new EnumWithContractJsonConverter());
                             _lowerCaseJsonSerializer = serializer;
                         }
                     }

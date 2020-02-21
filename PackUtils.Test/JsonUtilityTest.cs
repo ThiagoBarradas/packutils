@@ -15,7 +15,8 @@ namespace PackUtils.Test
             // arrange
             var obj = new JsonExampleTest
             {
-                SomeTest = "test"
+                SomeTest = "test",
+                TestEnumm = TestEnumm.FirstName
             };
 
             // act
@@ -23,6 +24,7 @@ namespace PackUtils.Test
 
             // assert
             Assert.Contains("someTest", json);
+            Assert.Contains("firstName", json);
         }
 
         [Fact]
@@ -34,7 +36,8 @@ namespace PackUtils.Test
                 SomeTest = "test",
                 CreateDDD = "true",
                 CreateDDDCode = "false",
-                Create123asd = "test"
+                Create123asd = "test",
+                TestEnumm = TestEnumm.FirstName
             };
 
             // act
@@ -45,6 +48,7 @@ namespace PackUtils.Test
             Assert.Contains("create_ddd\"", json);
             Assert.Contains("create_ddd_code", json);
             Assert.Contains("create123asd", json);
+            Assert.Contains("first_name", json);
         }
 
         [Fact]
@@ -204,5 +208,12 @@ namespace PackUtils.Test
         public string CreateDDDCode { get; set; }
 
         public string Create123asd { get; set; }
+
+        public TestEnumm TestEnumm { get; set; }
+    }
+
+    public enum TestEnumm
+    {
+        FirstName
     }
 }
