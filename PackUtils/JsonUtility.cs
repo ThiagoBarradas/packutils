@@ -429,7 +429,8 @@ namespace PackUtils
     {
         public LowerCaseNamingResolver()
         {
-            ProcessDictionaryKeys = true;
+            this.ProcessDictionaryKeys = true;
+            this.OverrideSpecifiedNames = true;
         }
 
         protected override string ResolvePropertyName(string name)
@@ -445,7 +446,11 @@ namespace PackUtils
     {
         public LowerCasePropertyNamesContractResolver()
         {
-            this.NamingStrategy = new LowerCaseNamingResolver();
+            this.NamingStrategy = new LowerCaseNamingResolver
+            {
+                ProcessDictionaryKeys = true,
+                OverrideSpecifiedNames = true
+            };
         }
     }
 
@@ -456,7 +461,8 @@ namespace PackUtils
     {
         public OriginalCaseNamingResolver()
         {
-            ProcessDictionaryKeys = true;
+            this.ProcessDictionaryKeys = true;
+            this.OverrideSpecifiedNames = true;
         }
 
         protected override string ResolvePropertyName(string name)
@@ -472,7 +478,11 @@ namespace PackUtils
     {
         public OriginalCasePropertyNamesContractResolver()
         {
-            this.NamingStrategy = new OriginalCaseNamingResolver();
+            this.NamingStrategy = new OriginalCaseNamingResolver
+            {
+                ProcessDictionaryKeys = true,
+                OverrideSpecifiedNames = true
+            };
         }
     }
 
@@ -485,7 +495,8 @@ namespace PackUtils
         {
             this.NamingStrategy = new SnakeCaseNamingStrategy
             {
-                ProcessDictionaryKeys = true
+                ProcessDictionaryKeys = true,
+                OverrideSpecifiedNames = true
             };
         }
     }
@@ -499,7 +510,8 @@ namespace PackUtils
         {
             this.NamingStrategy = new CamelCaseNamingStrategy
             {
-                ProcessDictionaryKeys = true
+                ProcessDictionaryKeys = true,
+                OverrideSpecifiedNames = true
             };
         }
     }

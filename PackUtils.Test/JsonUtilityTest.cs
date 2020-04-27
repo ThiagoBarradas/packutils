@@ -1,6 +1,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Xunit;
@@ -65,6 +66,26 @@ namespace PackUtils.Test
 
             // assert
             Assert.Contains("sometest", json);
+        }
+
+        [Fact]
+        public static void SnakeCaseJsonSerializerSettings_Should_Return_Parsed_Object_With_Dictionary()
+        {
+            // arrange
+            var obj = new JsonDictionaryExampleTest
+            {
+                TestEnumm = TestEnumm.FirstName,
+                MyDic = new Dictionary<TestEnumm, string>
+                {
+                    { TestEnumm.FirstName, "test" }
+                }
+            };
+
+            // act
+            var json = JsonConvert.SerializeObject(obj, JsonUtility.SnakeCaseJsonSerializerSettings);
+
+            // assert
+            Assert.Equal("{\"test_enumm\":\"first_name\",\"my_dic\":{\"first_name\":\"test\"}}", json);
         }
 
         [Fact]
@@ -133,7 +154,7 @@ namespace PackUtils.Test
                           "\"sub\" : {" +
                               "\"some\" : \"test1\"," +
                               "\"password\" : \"test2\"" +
-                          "}"+
+                          "}" +
                        "}";
             var blacklist = new string[] { "*password" };
 
@@ -178,7 +199,8 @@ namespace PackUtils.Test
                 SomeTest = "test",
                 Number = 1,
                 MyArray = new string[] { "x", "y" },
-                DepthObj = new {
+                DepthObj = new
+                {
                     MyGuid = Guid.Empty,
                     DateTime = new DateTime(2010, 10, 25)
                 }
@@ -210,6 +232,13 @@ namespace PackUtils.Test
         public string Create123asd { get; set; }
 
         public TestEnumm TestEnumm { get; set; }
+    }
+
+    public class JsonDictionaryExampleTest
+    {
+        public TestEnumm TestEnumm { get; set; }
+
+        public Dictionary<TestEnumm, string> MyDic { get; set; }
     }
 
     public enum TestEnumm
