@@ -5,6 +5,7 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using PackUtils.Converters;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace PackUtils
@@ -15,6 +16,15 @@ namespace PackUtils
     public static class JsonUtility
     {
         private readonly static object Lock = new object();
+
+        private static List<JsonConverter> DefaultConverters = new List<JsonConverter>
+        {
+            new EnumWithContractJsonConverter(),
+            new IsoDateTimeConverter
+            {
+                DateTimeFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss.ffffff"
+            }
+        };
 
         /// <summary>
         /// Get Newtonsoft JsonSerializerSettings by strategy (snake/snakecase, camel/camelcase, lower/lowercase or default)
@@ -83,7 +93,7 @@ namespace PackUtils
                             var settings = new JsonSerializerSettings();
 
                             settings.ContractResolver = new SnakeCasePropertyNamesContractResolver();
-                            settings.Converters.Add(new EnumWithContractJsonConverter());
+                            DefaultConverters.ForEach(c => settings.Converters.Add(c));
                             settings.NullValueHandling = NullValueHandling.Ignore;
 
                             _snakeCaseJsonSerializerSettings = settings;
@@ -112,8 +122,8 @@ namespace PackUtils
                         {
                             var settings = new JsonSerializerSettings();
 
-                            settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-                            settings.Converters.Add(new EnumWithContractJsonConverter());
+                            settings.ContractResolver = new CustomCamelCasePropertyNamesContractResolver();
+                            DefaultConverters.ForEach(c => settings.Converters.Add(c));
                             settings.NullValueHandling = NullValueHandling.Ignore;
 
                             _camelCaseJsonSerializerSettings = settings;
@@ -143,7 +153,7 @@ namespace PackUtils
                             var settings = new JsonSerializerSettings();
 
                             settings.ContractResolver = new LowerCasePropertyNamesContractResolver();
-                            settings.Converters.Add(new EnumWithContractJsonConverter());
+                            DefaultConverters.ForEach(c => settings.Converters.Add(c));
                             settings.NullValueHandling = NullValueHandling.Ignore;
 
                             _lowerCaseJsonSerializerSettings = settings;
@@ -174,7 +184,7 @@ namespace PackUtils
                             var settings = new JsonSerializerSettings();
 
                             settings.ContractResolver = new OriginalCasePropertyNamesContractResolver();
-                            settings.Converters.Add(new EnumWithContractJsonConverter());
+                            DefaultConverters.ForEach(c => settings.Converters.Add(c));
                             settings.NullValueHandling = NullValueHandling.Ignore;
 
                             _originalCaseJsonSerializerSettings = settings;
@@ -195,15 +205,27 @@ namespace PackUtils
         {
             get
             {
-                var serializer = new JsonSerializer();
-                serializer.NullValueHandling = NullValueHandling.Ignore;
-                serializer.ContractResolver = new CamelCasePropertyNamesContractResolver();
-                serializer.Converters.Add(new EnumWithContractJsonConverter());
+                if (_camelCaseJsonSerializer == null)
+                {
+                    lock (Lock)
+                    {
 
+                        if (_camelCaseJsonSerializer == null)
+                        {
+                            var serializer = new JsonSerializer();
+                            serializer.NullValueHandling = NullValueHandling.Ignore;
+                            serializer.ContractResolver = new CustomCamelCasePropertyNamesContractResolver();
+                            DefaultConverters.ForEach(c => serializer.Converters.Add(c));
 
-                return serializer;
+                            _camelCaseJsonSerializer = serializer;
+                        }
+                    }
+                }
+                return _camelCaseJsonSerializer;
             }
         }
+
+        private static JsonSerializer _camelCaseJsonSerializer;
 
         /// <summary>
         /// Snake case json serialize
@@ -221,7 +243,8 @@ namespace PackUtils
                             var serializer = new JsonSerializer();
                             serializer.NullValueHandling = NullValueHandling.Ignore;
                             serializer.ContractResolver = new SnakeCasePropertyNamesContractResolver();
-                            serializer.Converters.Add(new EnumWithContractJsonConverter());
+                            DefaultConverters.ForEach(c => serializer.Converters.Add(c));
+
                             _snakeCaseJsonSerializer = serializer;
                         }
                     }
@@ -249,7 +272,7 @@ namespace PackUtils
                             var serializer = new JsonSerializer();
                             serializer.NullValueHandling = NullValueHandling.Ignore;
                             serializer.ContractResolver = new LowerCasePropertyNamesContractResolver();
-                            serializer.Converters.Add(new EnumWithContractJsonConverter());
+                            DefaultConverters.ForEach(c => serializer.Converters.Add(c));
                             _lowerCaseJsonSerializer = serializer;
                         }
                     }
@@ -277,7 +300,7 @@ namespace PackUtils
                             var serializer = new JsonSerializer();
                             serializer.NullValueHandling = NullValueHandling.Ignore;
                             serializer.ContractResolver = new OriginalCasePropertyNamesContractResolver();
-                            serializer.Converters.Add(new StringEnumConverter());
+                            DefaultConverters.ForEach(c => serializer.Converters.Add(c));
 
                             _originalCaseJsonSerializer = serializer;
                         }
@@ -404,6 +427,11 @@ namespace PackUtils
     /// </summary>
     public class LowerCaseNamingResolver : NamingStrategy
     {
+        public LowerCaseNamingResolver()
+        {
+            ProcessDictionaryKeys = true;
+        }
+
         protected override string ResolvePropertyName(string name)
         {
             return name.ToLowerInvariant();
@@ -426,6 +454,11 @@ namespace PackUtils
     /// </summary>
     public class OriginalCaseNamingResolver : NamingStrategy
     {
+        public OriginalCaseNamingResolver()
+        {
+            ProcessDictionaryKeys = true;
+        }
+
         protected override string ResolvePropertyName(string name)
         {
             return name;
@@ -450,7 +483,24 @@ namespace PackUtils
     {
         public SnakeCasePropertyNamesContractResolver()
         {
-            this.NamingStrategy = new SnakeCaseNamingStrategy();
+            this.NamingStrategy = new SnakeCaseNamingStrategy
+            {
+                ProcessDictionaryKeys = true
+            };
+        }
+    }
+
+    /// <summary>
+    /// Camel case contract resolver
+    /// </summary>
+    public class CustomCamelCasePropertyNamesContractResolver : DefaultContractResolver
+    {
+        public CustomCamelCasePropertyNamesContractResolver()
+        {
+            this.NamingStrategy = new CamelCaseNamingStrategy
+            {
+                ProcessDictionaryKeys = true
+            };
         }
     }
 }

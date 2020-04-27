@@ -76,7 +76,8 @@ namespace PackUtils.Converters
         {
             var finalValue = value.ToString();
 
-            if (serializer.ContractResolver is CamelCasePropertyNamesContractResolver)
+            if (serializer.ContractResolver is CamelCasePropertyNamesContractResolver ||
+                serializer.ContractResolver is CustomCamelCasePropertyNamesContractResolver)
             {
                 finalValue = finalValue.ToCamelCase();
             }
