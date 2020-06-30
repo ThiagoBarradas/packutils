@@ -174,13 +174,17 @@ stages:
 
   - job: PackingNuget
     dependsOn:
-    - QualityAnalysis 
     - UpdateBuildVersion
+    - Build
+    - UnitTests
+    - QualityAnalysis 
     workspace:
       clean: all
     condition: |
       and
       (
+        in(dependencies.Build.result, 'Succeeded', 'Skipped'),
+        in(dependencies.UnitTests.result, 'Succeeded', 'Skipped'),
         in(dependencies.QualityAnalysis.result, 'Succeeded', 'Skipped'),
         or
         (
