@@ -158,7 +158,7 @@ namespace PackUtils.Test
         }
 
         [Theory]
-        [InlineData("‚¬ÈÌo123 lÁ¸a", "aAeio123 lcua")]
+        [InlineData("√¢√Ç√©√≠o123 l√ß√ºa", "aAeio123 lcua")]
         [InlineData("lcua", "lcua")]
         public static void RemoveDiacritics_Should_Works(string original, string expected)
         {
@@ -170,7 +170,7 @@ namespace PackUtils.Test
         }
 
         [Theory]
-        [InlineData("¡$%aA-_+=eio123 lcua", "aAeio lcua")]
+        [InlineData("√Å$%aA-_+=eio123 lcua", "aAeio lcua")]
         [InlineData("lcua", "lcua")]
         public static void RemoveNumbersAndSpecialCharacters_Should_Works(string original, string expected)
         {
