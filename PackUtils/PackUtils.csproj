@@ -7,8 +7,7 @@
     <PackageTags>enumeration, hash, json, newtonsoft, regex, signature, string, uri, util, utils, utility, utilities, crypt, dictionary, casting, cast</PackageTags>
     <RepositoryUrl>https://github.com/ThiagoBarradas/packutils</RepositoryUrl>
     <PackageLicenseUrl>https://github.com/ThiagoBarradas/packutils/blob/master/LICENSE</PackageLicenseUrl>
-    <Company></Company>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	<Company>Thiago Barradas</Company>
     <PackageIconUrl>https://i.imgur.com/bWz72sT.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/ThiagoBarradas/packutils</PackageProjectUrl>
     <LangVersion>7.3</LangVersion>

@@ -11,9 +11,9 @@ variables:
   sdk_project_name: 'PackUtils'
   sdk_project_path: 'PackUtils/PackUtils.csproj'
   net_version: 'netstandard2.0'
-  execute_test: ''
-  test_project_base_folder: ''
-  test_project_path: ''
+  execute_test: 'true'
+  test_project_base_folder: 'PackUtils.Test'
+  test_project_path: 'PackUtils.Test/PackUtils.Test.csproj'
   execute_sonarcloud: 'true'
   sonarcloud_project: 'ThiagoBarradas_packutils'
   sonarcloud_organization: 'thiagobarradas-github'
@@ -193,11 +193,6 @@ stages:
       ReleaseVersion: $(Build.BuildNumber) 
       PureVersion: $[ dependencies.UpdateBuildVersion.outputs['UpdateBuildVersionTask.PureVersion'] ]
     steps:
-    - script: | 
-        echo "ls /home/vsts/work/1/s/"
-        ls /home/vsts/work/1/s
-        echo "ls /home/vsts/work/1/s/PackUtils"
-        ls /home/vsts/work/1/s/PackUtils
     - task: DotNetCoreCLI@2
       displayName: 'Packing Release'
       inputs:
