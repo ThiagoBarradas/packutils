@@ -11,9 +11,9 @@ variables:
   sdk_project_name: 'PackUtils'
   sdk_project_path: 'PackUtils/PackUtils.csproj'
   net_version: 'netstandard2.0'
-  execute_test: ''
-  test_project_base_folder: ''
-  test_project_path: ''
+  execute_test: 'true'
+  test_project_base_folder: 'PackUtils.Test'
+  test_project_path: 'PackUtils.Test/PackUtils.Test.csproj'
   execute_sonarcloud: 'true'
   sonarcloud_project: 'ThiagoBarradas_packutils'
   sonarcloud_organization: 'thiagobarradas-github'
@@ -174,13 +174,17 @@ stages:
 
   - job: PackingNuget
     dependsOn:
-    - QualityAnalysis 
     - UpdateBuildVersion
+    - Build
+    - UnitTests
+    - QualityAnalysis 
     workspace:
       clean: all
     condition: |
       and
       (
+        in(dependencies.Build.result, 'Succeeded', 'Skipped'),
+        in(dependencies.UnitTests.result, 'Succeeded', 'Skipped'),
         in(dependencies.QualityAnalysis.result, 'Succeeded', 'Skipped'),
         or
         (
