@@ -37,7 +37,7 @@ artifacts:
   - path: PackUtils\bin\Release\PackUtils.%version%.nupkg
     name: PackUtils.%version%.nupkg
 
-deploy:
-  provider: NuGet
-  api_key:
-    secure: hkXpIUpYzUNo2MK2cFEolTq/lHA5v14G0Ew4ZhTAYSHd8Fcpy5u89rfJGQzk4LV3
+#deploy:
+#  provider: NuGet
+#  api_key:
+#    secure: hkXpIUpYzUNo2MK2cFEolTq/lHA5v14G0Ew4ZhTAYSHd8Fcpy5u89rfJGQzk4LV3
