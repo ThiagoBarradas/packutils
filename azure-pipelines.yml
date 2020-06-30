@@ -193,6 +193,11 @@ stages:
       ReleaseVersion: $(Build.BuildNumber) 
       PureVersion: $[ dependencies.UpdateBuildVersion.outputs['UpdateBuildVersionTask.PureVersion'] ]
     steps:
+    - script: | 
+        echo "ls /home/vsts/work/1/s/"
+        ls /home/vsts/work/1/s
+        echo "ls /home/vsts/work/1/s/PackUtils"
+        ls /home/vsts/work/1/s/PackUtils
     - task: DotNetCoreCLI@2
       displayName: 'Packing Release'
       inputs:
