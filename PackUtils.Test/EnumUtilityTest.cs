@@ -269,7 +269,7 @@ namespace PackUtils.Test
         [Description("test 1.1")]
         Test1,
 
-        [DisplayName("t3")]
+        [Description("t3")]
         Test3
     }
 }
