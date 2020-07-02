@@ -1,6 +1,6 @@
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/5bb3ad40445a4d5e9aad8469de06e808)](https://app.codacy.com/app/ThiagoBarradas/packutils?utm_source=github.com&utm_medium=referral&utm_content=ThiagoBarradas/packutils&utm_campaign=badger)
-[![Build status](https://ci.appveyor.com/api/projects/status/e50c386k68c9dy7j/branch/master?svg=true)](https://ci.appveyor.com/project/ThiagoBarradas/packutils/branch/master)
-[![codecov](https://codecov.io/gh/ThiagoBarradas/packutils/branch/master/graph/badge.svg)](https://codecov.io/gh/ThiagoBarradas/packutils)
+[![Build Status](https://barradas.visualstudio.com/Contributions/_apis/build/status/NugetPackage/Packutils?branchName=develop)](https://barradas.visualstudio.com/Contributions/_build/latest?definitionId=17&branchName=develop)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ThiagoBarradas_packutils&metric=alert_status)](https://sonarcloud.io/dashboard?id=ThiagoBarradas_packutils)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=ThiagoBarradas_packutils&metric=coverage)](https://sonarcloud.io/dashboard?id=ThiagoBarradas_packutils)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/PackUtils.svg)](https://www.nuget.org/packages/PackUtils/)
 [![NuGet Version](https://img.shields.io/nuget/v/PackUtils.svg)](https://www.nuget.org/packages/PackUtils/)
 
