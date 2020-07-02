@@ -79,9 +79,9 @@ stages:
       displayName: Update Version Number
       name: UpdateBuildVersionTask
     - bash: |
-        STAGING_URL="https://dev.azure.com/$(organization)/$(System.TeamProject)/_apis/build/status/$(System.DefinitionId)?branchName=$(UpdateBuildVersionTask.PreviousPrefix)/$(GitVersion.SemVer)&stageName=PublishNugetPackage"
+        STAGING_URL="https://dev.azure.com/$(organization)/$(System.TeamProject)/_apis/build/status/$(System.DefinitionId)?branchName=$(UpdateBuildVersionTask.PreviousPrefix)/$(Build.BuildNumber)&stageName=DeployPackage"
         STAGING_RESULT=$`curl --silent $STAGING_URL`
-        echo "URL: $STAGING_URL"
+        echo "URL: $STAGING_URL" 
         echo "RESULT: $STAGING_RESULT"
         SUCCEEDED=$`echo $STAGING_RESULT | grep -P 'succeeded' -o | head -n 1`
         if [[ "$STAGING_RESULT" =~ "succeeded" ]];
