@@ -154,7 +154,7 @@ namespace PackUtils
             }
             else
             {
-                return HashSHA256(key, message);
+                return HashSHA1(key, message);
             }
         }
 
