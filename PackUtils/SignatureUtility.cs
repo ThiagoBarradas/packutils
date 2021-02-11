@@ -18,10 +18,10 @@ namespace PackUtils
         /// <param name="privateKey">Private key</param>
         /// <param name="data">Object</param>
         /// <returns></returns>
-        public static string CreateSignatureFromObject(string privateKey, object data)
+        public static string CreateSignatureFromObject(string privateKey, object data, HashType hashType = HashType.SHA256)
         {
             string ignoredField = null;
-            return SignatureUtility.CreateSignatureFromObject(privateKey, data, ignoredField);
+            return SignatureUtility.CreateSignatureFromObject(privateKey, data, ignoredField, hashType);
         }
 
         /// <summary>
@@ -31,9 +31,9 @@ namespace PackUtils
         /// <param name="data">Object</param>
         /// <param name="ignoreField">Ignore a property</param>
         /// <returns></returns>
-        public static string CreateSignatureFromObject(string privateKey, object data, string ignoreField)
+        public static string CreateSignatureFromObject(string privateKey, object data, string ignoreField, HashType hashType = HashType.SHA256)
         {
-            return SignatureUtility.CreateSignatureFromObject(privateKey, data, SignatureUtility.GenerateIgnoreFields(ignoreField));
+            return SignatureUtility.CreateSignatureFromObject(privateKey, data, SignatureUtility.GenerateIgnoreFields(ignoreField), hashType);
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace PackUtils
         /// <param name="data">Object</param>
         /// <param name="ignoreFields">Ignore some properties</param>
         /// <returns></returns>
-        public static string CreateSignatureFromObject(string privateKey, object data, List<string> ignoreFields)
+        public static string CreateSignatureFromObject(string privateKey, object data, List<string> ignoreFields, HashType hashType = HashType.SHA256)
         {
             var ignoreFieldsList = new List<string>();
             if (ignoreFields != null)
@@ -70,7 +70,7 @@ namespace PackUtils
                 }
             }
 
-            var signature = SignatureUtility.Hash(privateKey, message);
+            var signature = SignatureUtility.Hash(privateKey, message, hashType);
 
             return signature;
         }
@@ -81,9 +81,9 @@ namespace PackUtils
         /// <param name="privateKey"></param>
         /// <param name="message"></param>
         /// <returns></returns>
-        public static string CreateSignature(string privateKey, string message)
+        public static string CreateSignature(string privateKey, string message, HashType hashType = HashType.SHA256)
         {
-            return SignatureUtility.Hash(privateKey, message);
+            return SignatureUtility.Hash(privateKey, message, hashType);
         }
 
         /// <summary>
@@ -93,10 +93,10 @@ namespace PackUtils
         /// <param name="privateKey">Private key</param>
         /// <param name="data">Object</param>
         /// <returns></returns>
-        public static bool ValidateSignatureFromObject(string signature, string privateKey, object data)
+        public static bool ValidateSignatureFromObject(string signature, string privateKey, object data, HashType hashType = HashType.SHA256)
         {
             string ignoredField = null;
-            return SignatureUtility.ValidateSignatureFromObject(signature, privateKey, data, ignoredField);
+            return SignatureUtility.ValidateSignatureFromObject(signature, privateKey, data, ignoredField, hashType);
         }
 
         /// <summary>
@@ -107,9 +107,9 @@ namespace PackUtils
         /// <param name="data">Object</param>
         /// <param name="ignoreField">Ignore a properties</param>
         /// <returns></returns>
-        public static bool ValidateSignatureFromObject(string signature, string privateKey, object data, string ignoreFields)
+        public static bool ValidateSignatureFromObject(string signature, string privateKey, object data, string ignoreFields, HashType hashType = HashType.SHA256)
         {
-            return SignatureUtility.ValidateSignatureFromObject(signature, privateKey, data, SignatureUtility.GenerateIgnoreFields(ignoreFields));
+            return SignatureUtility.ValidateSignatureFromObject(signature, privateKey, data, SignatureUtility.GenerateIgnoreFields(ignoreFields), hashType);
         }
 
         /// <summary>
@@ -120,9 +120,9 @@ namespace PackUtils
         /// <param name="data">Object</param>
         /// <param name="ignoreFields">Ignore some properties</param>
         /// <returns></returns>
-        public static bool ValidateSignatureFromObject(string signature, string privateKey, object data, List<string> ignoreFields)
+        public static bool ValidateSignatureFromObject(string signature, string privateKey, object data, List<string> ignoreFields, HashType hashType = HashType.SHA256)
         {
-            var computedSignature = SignatureUtility.CreateSignatureFromObject(privateKey, data, ignoreFields);
+            var computedSignature = SignatureUtility.CreateSignatureFromObject(privateKey, data, ignoreFields, hashType);
             return string.Compare(computedSignature, signature, StringComparison.OrdinalIgnoreCase) == 0;
         }
 
@@ -133,9 +133,11 @@ namespace PackUtils
         /// <param name="privateKey">Private key</param>
         /// <param name="message">Content</param>
         /// <returns></returns>
-        public static bool ValidateSignature(string signature, string privateKey, string message)
+        public static bool ValidateSignature(string signature, string privateKey, string message, HashType hashType = HashType.SHA256)
         {
-            return (signature == SignatureUtility.CreateSignature(privateKey, message));
+            var computedSignature = SignatureUtility.Hash(privateKey, message, hashType);
+
+            return string.Compare(computedSignature, signature, StringComparison.OrdinalIgnoreCase) == 0;
         }
 
         /// <summary>
@@ -144,7 +146,25 @@ namespace PackUtils
         /// <param name="key">private key</param>
         /// <param name="message">Message</param>
         /// <returns></returns>
-        private static string Hash(string key, string message)
+        public static string Hash(string key, string message, HashType hashType)
+        {
+            if (hashType == HashType.SHA256)
+            {
+                return HashSHA256(key, message);
+            }
+            else
+            {
+                return HashSHA256(key, message);
+            }
+        }
+
+        /// <summary>
+        /// Create Hash SHA256
+        /// </summary>
+        /// <param name="key">private key</param>
+        /// <param name="message">Message</param>
+        /// <returns></returns>
+        public static string HashSHA256(string key, string message)
         {
             var keyBytes = Encoding.UTF8.GetBytes(key);
             var hmac = new HMACSHA256(keyBytes);
@@ -154,7 +174,24 @@ namespace PackUtils
 
             return signature;
         }
-        
+
+        /// <summary>
+        /// Create Hash SHA1
+        /// </summary>
+        /// <param name="key">private key</param>
+        /// <param name="message">Message</param>
+        /// <returns></returns>
+        public static string HashSHA1(string key, string message)
+        {
+            var keyBytes = Encoding.UTF8.GetBytes(key);
+            var hmac = new HMACSHA1(keyBytes);
+            var messageBytes = Encoding.UTF8.GetBytes(message);
+            var hashBytes = hmac.ComputeHash(messageBytes);
+            var signature = BitConverter.ToString(hashBytes).Replace("-", string.Empty).ToLowerInvariant();
+
+            return signature;
+        }
+
         /// <summary>
         /// Generate ignored fields
         /// </summary>
@@ -170,6 +207,12 @@ namespace PackUtils
             }
 
             return ignoreFields;
+        }
+
+        public enum HashType
+        {
+            SHA256,
+            SHA1
         }
     }
 }

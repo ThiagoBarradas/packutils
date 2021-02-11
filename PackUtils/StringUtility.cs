@@ -12,7 +12,7 @@ namespace PackUtils
     public static class StringUtility
     {
         /// <summary>
-        /// 
+        /// To Case (snake | snakecase, camel | camelcase, lower | lowercase)
         /// </summary>
         /// <param name="value"></param>
         /// <param name="strategy"></param>
@@ -169,6 +169,41 @@ namespace PackUtils
             }
 
             return text.ToLowerInvariant().Replace("_", "");
+        }
+
+        /// <summary>
+        /// Replace last occurrence from string
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="find"></param>
+        /// <param name="replace"></param>
+        /// <returns></returns>
+        private static string ReplaceLastOccurrence(this string text, string find, string replace)
+        {
+            int place = text.LastIndexOf(find, StringComparison.InvariantCultureIgnoreCase);
+
+            if (place == -1)
+            {
+                return text;
+            }
+
+            string result = text.Remove(place, find.Length).Insert(place, replace);
+            return result;
+        }
+
+        /// <summary>
+        /// Capitalize string
+        /// </summary>
+        /// <param name="content"></param>
+        /// <returns></returns>
+        public static string UppercaseFirst(this string content)
+        {
+            if (string.IsNullOrEmpty(content))
+            {
+                return string.Empty;
+            }
+
+            return char.ToUpper(content[0]) + content.Substring(1);
         }
     }
 }
