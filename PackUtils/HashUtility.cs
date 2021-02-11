@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -27,7 +26,7 @@ namespace PackUtils
         /// </summary>
         /// <param name="value">value</param>
         /// <returns></returns>
-        public static string GenerateSha256(string value)
+        public static string GenerateSha256(this string value)
         {
             return GenerateSha256(value, null);
         }
@@ -38,7 +37,7 @@ namespace PackUtils
         /// <param name="value">value</param>
         /// <param name="gap">gap</param>
         /// <returns></returns>
-        public static string GenerateSha256(string value, string gap)
+        public static string GenerateSha256(this string value, string gap)
         {
             var newString = value + (gap ?? "");
 
@@ -50,6 +49,28 @@ namespace PackUtils
                 hash.Append(theByte.ToString("x2"));
             }
             return hash.ToString();
+        }
+
+        /// <summary>
+        /// Base 64 encode
+        /// </summary>
+        /// <param name="plainText"></param>
+        /// <returns></returns>
+        public static string Base64Encode(this string plainText)
+        {
+            var plainTextBytes = Encoding.UTF8.GetBytes(plainText);
+            return Convert.ToBase64String(plainTextBytes);
+        }
+
+        /// <summary>
+        /// Base 64 decode
+        /// </summary>
+        /// <param name="base64"></param>
+        /// <returns></returns>
+        public static string Base64Decode(this string base64)
+        {
+            var plainTextBytes = Convert.FromBase64String(base64);
+            return Encoding.UTF8.GetString(plainTextBytes);
         }
     }
 }
