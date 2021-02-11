@@ -7,6 +7,7 @@ using PackUtils.Converters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace PackUtils
 {
@@ -368,6 +369,42 @@ namespace PackUtils
         }
 
         /// <summary>
+        /// returns original json if not null. if empty, returns a valid empty json "{}"
+        /// </summary>
+        /// <param name="json"></param>
+        /// <returns></returns>
+        public static string GetJsonStringWhenEmpty(this string json)
+        {
+            if (string.IsNullOrWhiteSpace(json))
+            {
+                json = "{}";
+            }
+
+            return json;
+        }
+
+        /// <summary>
+        /// alias to JsonConvert.DeserializeObject<T>(json);
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="json"></param>
+        /// <returns></returns>
+        public static T Deserialize<T>(this string json)
+        {
+            return JsonConvert.DeserializeObject<T>(json);
+        }
+
+        /// <summary>
+        /// alias to JsonConvert.SerializeObject(obj);
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static string Serialize(this object obj)
+        {
+            return JsonConvert.SerializeObject(obj);
+        }
+
+        /// <summary>
         /// Use json as flexible converter
         /// </summary>
         /// <param name="jsonSerializer"></param>
@@ -419,6 +456,242 @@ namespace PackUtils
             }
 
             return default(T);
+        }
+
+        /// <summary>
+        /// Deserialize object as dic <string, object>
+        /// </summary>
+        /// <param name="json"></param>
+        /// <returns></returns>
+        public static IDictionary<string, object> JsonStringToDictionary(this string json)
+        {
+            return JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
+        }
+
+        /// <summary>
+        /// add a "container" to avoid array at json root
+        /// </summary>
+        /// <param name="json"></param>
+        /// <param name="property"></param>
+        /// <returns></returns>
+        public static string AvoidArray(this string json, string property)
+        {
+            var isArray = json.Trim().Trim('\t').StartsWith("[");
+            if (isArray)
+            {
+                json = "{ \"" + property + "\" : " + json + " }";
+            }
+
+            return json;
+        }
+
+        /// <summary>
+        /// Rename a jproperty
+        /// </summary>
+        /// <param name="token"></param>
+        /// <param name="newName"></param>
+        public static void Rename(this JToken token, string newName)
+        {
+            if (token == null)
+            {
+                throw new ArgumentNullException(nameof(token));
+            }
+
+            JProperty property;
+
+            if (token.Type == JTokenType.Property)
+            {
+                if (token.Parent == null)
+                {
+                    throw new InvalidOperationException("Cannot rename a property with no parent");
+                }
+
+                property = (JProperty)token;
+            }
+            else
+            {
+                if (token.Parent == null || token.Parent.Type != JTokenType.Property)
+                {
+                    throw new InvalidOperationException("This token's parent is not a JProperty; cannot rename");
+                }
+
+                property = (JProperty)token.Parent;
+            }
+
+            var existingValue = property.Value;
+            property.Value = null;
+            var newProperty = new JProperty(newName, existingValue);
+            property.Replace(newProperty);
+        }
+
+        /// <summary>
+        /// Remove empty childrens from jtoken
+        /// </summary>
+        /// <param name="jtoken"></param>
+        /// <returns></returns>
+        public static JToken RemoveEmptyChildren(this JToken jtoken)
+        {
+            if (jtoken == null)
+            {
+                return jtoken;
+            }
+
+            switch (jtoken.Type)
+            {
+                case JTokenType.Object:
+                    return jtoken.RemoveEmptyChildrenFromObject();
+                case JTokenType.Array:
+                    return jtoken.RemoveEmptyChildrenFromArray();
+                default:
+                    return jtoken;
+            }
+        }
+
+        /// <summary>
+        /// Remove empty childrens from jtoken (when array)
+        /// </summary>
+        /// <param name="jtoken"></param>
+        /// <returns></returns>
+        private static JToken RemoveEmptyChildrenFromArray(this JToken jtoken)
+        {
+            JArray copy = new JArray();
+            foreach (JToken item in jtoken.Children())
+            {
+                var child = item;
+                if (child.HasValues)
+                {
+                    child = child.RemoveEmptyChildren();
+                }
+                if (!child.IsEmpty())
+                {
+                    copy.Add(child);
+                }
+            }
+            return copy;
+        }
+
+        /// <summary>
+        /// Remove empty childrens from jtoken (when object)
+        /// </summary>
+        /// <param name="jtoken"></param>
+        /// <returns></returns>
+        private static JToken RemoveEmptyChildrenFromObject(this JToken jtoken)
+        {
+            var copy = new JObject();
+            foreach (JProperty prop in jtoken.Children<JProperty>())
+            {
+                var child = prop.Value;
+                if (child.HasValues)
+                {
+                    child = child.RemoveEmptyChildren();
+                }
+                if (!child.IsEmpty())
+                {
+                    copy.Add(prop.Name, child);
+                }
+            }
+            return copy;
+        }
+
+        /// <summary>
+        /// Check if jtoken is empty
+        /// </summary>
+        /// <param name="jtoken"></param>
+        /// <returns></returns>
+        private static bool IsEmpty(this JToken jtoken)
+        {
+            return (jtoken.Type == JTokenType.Array && !jtoken.HasValues) ||
+                   (jtoken.Type == JTokenType.Object && !jtoken.HasValues) ||
+                   (jtoken.Type == JTokenType.String && jtoken.ToString() == String.Empty) ||
+                   (jtoken.Type == JTokenType.Null);
+        }
+
+        /// <summary>
+        /// Rename all property found in jtoken and childrens
+        /// </summary>
+        /// <param name="jtoken"></param>
+        /// <param name="oldPropertyName"></param>
+        /// <param name="newPropertyName"></param>
+        /// <param name="handleValue"></param>
+        /// <returns></returns>
+        public static JToken RenameProperty(this JToken jtoken, string oldPropertyName, string newPropertyName, Func<JToken, JToken> handleValue)
+        {
+            if (string.IsNullOrWhiteSpace(oldPropertyName) == true)
+            {
+                throw new ArgumentNullException(nameof(oldPropertyName));
+            }
+
+            if (string.IsNullOrWhiteSpace(newPropertyName) == true)
+            {
+                throw new ArgumentNullException(nameof(newPropertyName));
+            }
+
+            if (jtoken == null)
+            {
+                return jtoken;
+            }
+
+            RenamePropertyFromJToken(jtoken, oldPropertyName, newPropertyName, handleValue);
+
+            return jtoken;
+        }
+
+        /// <summary>
+        /// Rename all property found in jtoken and childrens (core / recursive method)
+        /// </summary>
+        /// <param name="jtoken"></param>
+        /// <param name="oldPropertyName"></param>
+        /// <param name="newPropertyName"></param>
+        /// <param name="handleValue"></param>
+        /// <returns></returns>
+        private static void RenamePropertyFromJToken(JToken token, string oldPropertyName, string newPropertyName, Func<JToken, JToken> handleValue)
+        {
+            JContainer container = token as JContainer;
+            if (container == null)
+            {
+                return; // abort recursive
+            }
+
+            List<JToken> removeList = new List<JToken>();
+            foreach (JToken jtoken in container.Children())
+            {
+                if (jtoken is JProperty prop)
+                {
+                    var matching = Regex.IsMatch(prop.Path, $"*.{oldPropertyName}".ToWildcardToRegular(), RegexOptions.IgnoreCase | RegexOptions.CultureInvariant) ||
+                                    string.Equals(prop.Path, oldPropertyName, StringComparison.InvariantCultureIgnoreCase);
+
+                    if (matching)
+                    {
+                        removeList.Add(jtoken);
+                    }
+                }
+
+                // call recursive 
+                RenamePropertyFromJToken(jtoken, oldPropertyName, newPropertyName, handleValue);
+            }
+
+            // replace 
+            for (int i = 0; i < removeList.Count; i++)
+            {
+                var prop = (JProperty)removeList[i];
+
+                if (handleValue != null)
+                {
+                    prop.Value = (string)handleValue.Invoke(prop.Value);
+                }
+
+                prop.Rename(newPropertyName);
+            }
+        }
+
+        /// <summary>
+        /// Cast wildcard (*) to regex
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        private static string ToWildcardToRegular(this string value)
+        {
+            return "^" + Regex.Escape(value).Replace("\\*", ".*") + "$";
         }
     }
 
