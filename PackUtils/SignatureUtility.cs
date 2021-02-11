@@ -93,7 +93,7 @@ namespace PackUtils
         /// <param name="privateKey">Private key</param>
         /// <param name="data">Object</param>
         /// <returns></returns>
-        public static bool ValidateSignatureFromObject(string signature, string privateKey, object data, HashType hashType = HashType.SHA256)
+        public static bool ValidateSignatureFromObject(this string signature, string privateKey, object data, HashType hashType = HashType.SHA256)
         {
             string ignoredField = null;
             return SignatureUtility.ValidateSignatureFromObject(signature, privateKey, data, ignoredField, hashType);
@@ -107,7 +107,7 @@ namespace PackUtils
         /// <param name="data">Object</param>
         /// <param name="ignoreField">Ignore a properties</param>
         /// <returns></returns>
-        public static bool ValidateSignatureFromObject(string signature, string privateKey, object data, string ignoreFields, HashType hashType = HashType.SHA256)
+        public static bool ValidateSignatureFromObject(this string signature, string privateKey, object data, string ignoreFields, HashType hashType = HashType.SHA256)
         {
             return SignatureUtility.ValidateSignatureFromObject(signature, privateKey, data, SignatureUtility.GenerateIgnoreFields(ignoreFields), hashType);
         }
@@ -120,7 +120,7 @@ namespace PackUtils
         /// <param name="data">Object</param>
         /// <param name="ignoreFields">Ignore some properties</param>
         /// <returns></returns>
-        public static bool ValidateSignatureFromObject(string signature, string privateKey, object data, List<string> ignoreFields, HashType hashType = HashType.SHA256)
+        public static bool ValidateSignatureFromObject(this string signature, string privateKey, object data, List<string> ignoreFields, HashType hashType = HashType.SHA256)
         {
             var computedSignature = SignatureUtility.CreateSignatureFromObject(privateKey, data, ignoreFields, hashType);
             return string.Compare(computedSignature, signature, StringComparison.OrdinalIgnoreCase) == 0;
@@ -133,7 +133,7 @@ namespace PackUtils
         /// <param name="privateKey">Private key</param>
         /// <param name="message">Content</param>
         /// <returns></returns>
-        public static bool ValidateSignature(string signature, string privateKey, string message, HashType hashType = HashType.SHA256)
+        public static bool ValidateSignature(this string signature, string privateKey, string message, HashType hashType = HashType.SHA256)
         {
             var computedSignature = SignatureUtility.Hash(privateKey, message, hashType);
 

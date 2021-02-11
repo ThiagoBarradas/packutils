@@ -78,7 +78,7 @@ namespace PackUtils
         /// <param name="headers"></param>
         /// <param name="headerName"></param>
         /// <returns></returns>
-        private static string GetHeaderValue(this IHeaderDictionary headers, string headerName)
+        public static string GetHeaderValue(this IHeaderDictionary headers, string headerName)
         {
             var idempotencyKey = headers.FirstOrDefault(r => r.Key.ToLowerInvariant() == headerName.ToLowerInvariant()).Value;
 
@@ -87,6 +87,12 @@ namespace PackUtils
                 : null;
         }
 
+        /// <summary>
+        /// Generate basic auth
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="pass"></param>
+        /// <returns></returns>
         private static string GenerateBasicAuthValue(string user, string pass)
         {
             return "Basic " + $"{user}:{pass}".Base64Encode();
