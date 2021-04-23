@@ -23,7 +23,7 @@ namespace PackUtils
             new EnumWithContractJsonConverter(),
             new IsoDateTimeConverter
             { 
-                DateTimeFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss.ffffff"
+                DateTimeFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss.ffffff" 
             }
         };
 
