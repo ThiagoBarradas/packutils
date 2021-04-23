@@ -18,7 +18,7 @@ namespace PackUtils
     {
         private readonly static object Lock = new object();
 
-        private static List<JsonConverter> DefaultConverters = new List<JsonConverter>
+        public static List<JsonConverter> DefaultConverters = new List<JsonConverter>
         {
             new EnumWithContractJsonConverter(),
             new IsoDateTimeConverter

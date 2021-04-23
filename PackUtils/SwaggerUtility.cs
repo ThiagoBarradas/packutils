@@ -84,4 +84,12 @@ namespace PackUtils
             SwaggerEnum.Apply(schema, context, "lowercase");
         }
     }
+
+    public class OriginalEnumSchemaFilter : Swashbuckle.AspNetCore.SwaggerGen.ISchemaFilter
+    {
+        public void Apply(OpenApiSchema schema, SchemaFilterContext context)
+        {
+            SwaggerEnum.Apply(schema, context, "original");
+        }
+    }
 }
