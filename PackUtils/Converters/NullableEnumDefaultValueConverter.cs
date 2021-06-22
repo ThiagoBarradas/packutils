@@ -12,7 +12,7 @@ namespace PackUtils.Converters
     /// </summary>
     public class NullableEnumDefaultValueConverter : JsonConverter
     {
-        private readonly string _defaultValue;
+        private readonly string DefaultValue;
 
         public NullableEnumDefaultValueConverter()
         {
@@ -26,7 +26,7 @@ namespace PackUtils.Converters
                 throw new ArgumentNullException(nameof(enumDefaultValue), "An enum default value is required.");
             }
 
-            _defaultValue = enumDefaultValue.ToString();
+            this.DefaultValue = enumDefaultValue.ToString();
         }
 
         public override bool CanConvert(Type objectType)
@@ -68,7 +68,7 @@ namespace PackUtils.Converters
                     }
 
                     var firstEnumValue = enumValues.FirstOrDefault();
-                    if (string.Equals(firstEnumValue.ToString(), _defaultValue))
+                    if (string.Equals(firstEnumValue.ToString(), this.DefaultValue))
                     {
                         return Enum.Parse(enumType, firstEnumValue);
                     }
