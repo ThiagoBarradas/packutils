@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Nancy;
 using Newtonsoft.Json;
 using System;
-using System.Linq;
 using TimeZoneConverter;
 
 namespace PackUtils.Converters
@@ -66,19 +64,6 @@ namespace PackUtils.Converters
             try
             {
                 var timezone = httpContext.Request.Headers[headerName];
-                return TZConvert.GetTimeZoneInfo(timezone);
-            }
-            catch (Exception)
-            {
-                return DefaultTimeZone;
-            }
-        }
-
-        public static TimeZoneInfo GetTimeZoneByNancyHeader(NancyContext nancyContext, string headerName)
-        {
-            try
-            {
-                var timezone = nancyContext.Request.Headers[headerName].FirstOrDefault();
                 return TZConvert.GetTimeZoneInfo(timezone);
             }
             catch (Exception)
