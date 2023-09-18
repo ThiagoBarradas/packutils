@@ -1,89 +1,52 @@
 ﻿using Newtonsoft.Json;
 using RestSharp;
-using RestSharp.Deserializers;
 using RestSharp.Serializers;
+using System;
 using System.IO;
 
 namespace PackUtils
 {
-    public class NewtonsoftRestsharpJsonSerializer : ISerializer, IDeserializer
+    public class NewtonsoftRestsharpJsonSerializer : IRestSerializer, ISerializer, IDeserializer
     {
-        private Newtonsoft.Json.JsonSerializer Serializer { get; set; }
+        public ISerializer Serializer => this;
+        public IDeserializer Deserializer => this;
+        
+        public DataFormat DataFormat { get; } = DataFormat.Json;
+        public SupportsContentType SupportsContentType => contentType => contentType.Value.EndsWith("json", StringComparison.InvariantCultureIgnoreCase);
+        public ContentType ContentType { get; set; } = ContentType.Json;
+        public string[] AcceptedContentTypes => ContentType.JsonAccept;
 
-        public NewtonsoftRestsharpJsonSerializer(Newtonsoft.Json.JsonSerializer serializer)
+        private JsonSerializer NewtonsoftSerializer { get; set; }
+
+        public NewtonsoftRestsharpJsonSerializer(JsonSerializer serializer)
         {
-            this.Serializer = serializer;
+            this.NewtonsoftSerializer = serializer;
         }
-
-        public string ContentType
-        {
-            get { return "application/json"; }
-            set { }
-        }
-
-        public string DateFormat { get; set; }
-
-        public string Namespace { get; set; }
-
-        public string RootElement { get; set; }
 
         public string Serialize(object obj)
         {
-            using (var stringWriter = new StringWriter())
-            {
-                using (var jsonTextWriter = new JsonTextWriter(stringWriter))
-                {
-                    Serializer.Serialize(jsonTextWriter, obj);
+            if (obj == null) return null;
 
-                    return stringWriter.ToString();
-                }
-            }
+            using var stringWriter = new StringWriter();
+            using var jsonTextWriter = new JsonTextWriter(stringWriter);
+            NewtonsoftSerializer.Serialize(jsonTextWriter, obj);
+            return stringWriter.ToString();
         }
 
-        public T Deserialize<T>(RestSharp.IRestResponse response)
+        public string Serialize(Parameter bodyParameter) 
+            => Serialize(bodyParameter.Value);
+
+        public T Deserialize<T>(RestResponse response)
         {
             var content = response.Content;
+            
+            if (content == null)
+                throw new DeserializationException(response, new InvalidOperationException("Response content is null"));
 
-            using (var stringReader = new StringReader(content))
-            {
-                using (var jsonTextReader = new JsonTextReader(stringReader))
-                {
-                    return Serializer.Deserialize<T>(jsonTextReader);
-                }
-            }
+            using var stringReader = new StringReader(content);
+            using var jsonTextReader = new JsonTextReader(stringReader);
+            return NewtonsoftSerializer.Deserialize<T>(jsonTextReader);
         }
+
     }
-
-    public static class NewtonsoftRestsharpJsonSerializerExtension
-    {
-        public static void AddNewtonsoftResponseHandler(this IRestClient restClient, NewtonsoftRestsharpJsonSerializer serializer)
-        {
-            string[] contentTypes = new string[]
-            {
-                "application/json",
-                "text/json",
-                "text/x-json",
-                "text/javascript",
-                "*+json"
-            };
-
-            foreach(var contentType in contentTypes)
-            {
-                restClient.AddHandler(contentType, serializer);
-            }
-        }
-
-        public static void AddNewtonsoftRequestHandler(this IRestRequest restRequest, NewtonsoftRestsharpJsonSerializer serializer)
-        {
-            restRequest.RequestFormat = DataFormat.Json;
-            restRequest.JsonSerializer = serializer;
-        }
-
-        public static void AddNewtonsoftHandler(this IRestClient restClient, IRestRequest restRequest, NewtonsoftRestsharpJsonSerializer serializer)
-        {
-            restClient.AddNewtonsoftResponseHandler(serializer);
-            restRequest.AddNewtonsoftRequestHandler(serializer);            
-        }
-    }
-
 }
