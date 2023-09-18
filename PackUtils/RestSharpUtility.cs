@@ -21,7 +21,7 @@ namespace PackUtils
 
         public static void AddJsonBodyAsString(this RestRequest request, string content)
         {
-            if (request.Method != Method.Get && !string.IsNullOrWhiteSpace(content))
+            if (request.Method != Method.GET && !string.IsNullOrWhiteSpace(content))
             {
                 request.AddParameter("application/json", content, ParameterType.RequestBody);
             }

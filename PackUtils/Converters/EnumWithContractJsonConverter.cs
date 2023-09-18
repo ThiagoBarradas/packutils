@@ -11,6 +11,8 @@ namespace PackUtils.Converters
     /// </summary>
     public class EnumWithContractJsonConverter : JsonConverter
     {
+        public static bool IgnoreEnumCase { get; set; } = false;
+
         public override bool CanConvert(Type objectType)
         {
             Type type = IsNullableType(objectType)
@@ -76,18 +78,21 @@ namespace PackUtils.Converters
         {
             var finalValue = value.ToString();
 
-            if (serializer.ContractResolver is CamelCasePropertyNamesContractResolver ||
-                serializer.ContractResolver is CustomCamelCasePropertyNamesContractResolver)
+            if (!IgnoreEnumCase)
             {
-                finalValue = finalValue.ToCamelCase();
-            }
-            else if (serializer.ContractResolver is SnakeCasePropertyNamesContractResolver)
-            {
-                finalValue = finalValue.ToSnakeCase();
-            }
-            else if (serializer.ContractResolver is LowerCasePropertyNamesContractResolver)
-            {
-                finalValue = finalValue.ToLowerCase();
+                if (serializer.ContractResolver is CamelCasePropertyNamesContractResolver ||
+                    serializer.ContractResolver is CustomCamelCasePropertyNamesContractResolver)
+                {
+                    finalValue = finalValue.ToCamelCase();
+                }
+                else if (serializer.ContractResolver is SnakeCasePropertyNamesContractResolver)
+                {
+                    finalValue = finalValue.ToSnakeCase();
+                }
+                else if (serializer.ContractResolver is LowerCasePropertyNamesContractResolver)
+                {
+                    finalValue = finalValue.ToLowerCase();
+                }
             }
 
             writer.WriteValue(finalValue);
