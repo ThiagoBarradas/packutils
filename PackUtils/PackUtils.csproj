@@ -7,23 +7,21 @@
     <PackageTags>enumeration, hash, json, newtonsoft, regex, signature, string, uri, util, utils, utility, utilities, crypt, dictionary, casting, cast</PackageTags>
     <RepositoryUrl>https://github.com/ThiagoBarradas/packutils</RepositoryUrl>
     <PackageLicenseUrl>https://github.com/ThiagoBarradas/packutils/blob/master/LICENSE</PackageLicenseUrl>
-	<Company>Thiago Barradas</Company>
+	  <Company>Thiago Barradas</Company>
     <PackageIconUrl>https://i.imgur.com/bWz72sT.png</PackageIconUrl>
     <PackageProjectUrl>https://github.com/ThiagoBarradas/packutils</PackageProjectUrl>
-    <LangVersion>7.3</LangVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Hashids.net" Version="1.4.1" />
+    <PackageReference Include="Hashids.net" Version="1.7.0" />
     <PackageReference Include="JsonMasking" Version="1.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
-    <PackageReference Include="MongoDB.Driver" Version="2.13.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="MongoDB.Bson" Version="2.21.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="RestSharp" Version="106.12.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.5.1" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="5.5.1" />
-    <PackageReference Include="Swashbuckle.Core" Version="5.6.0" />
-    <PackageReference Include="TimeZoneConverter" Version="3.5.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.5.0" />
+    <PackageReference Include="TimeZoneConverter" Version="6.1.0" />
   </ItemGroup>
 
 </Project>

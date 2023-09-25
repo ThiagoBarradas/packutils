@@ -67,7 +67,7 @@ namespace PackUtils
                 "*+json"
             };
 
-            foreach(var contentType in contentTypes)
+            foreach (var contentType in contentTypes)
             {
                 restClient.AddHandler(contentType, serializer);
             }
@@ -82,7 +82,7 @@ namespace PackUtils
         public static void AddNewtonsoftHandler(this IRestClient restClient, IRestRequest restRequest, NewtonsoftRestsharpJsonSerializer serializer)
         {
             restClient.AddNewtonsoftResponseHandler(serializer);
-            restRequest.AddNewtonsoftRequestHandler(serializer);            
+            restRequest.AddNewtonsoftRequestHandler(serializer);
         }
     }
 
