@@ -89,6 +89,7 @@ stages:
             echo "$PREVIOUS_PREFIX branch is ok!"
         else
             echo "$PREVIOUS_PREFIX branch is not ok!"
+            exit 1
         fi
       condition: contains(variables['Build.SourceBranch'], '/tags/')
       displayName: Break if release/hotfix branch is not passing
